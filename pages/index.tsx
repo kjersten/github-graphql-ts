@@ -7,8 +7,8 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/client";
 
 import ClientOnly from "../components/frame/ClientOnly";
-// import OpenPullRequests from "../components/OpenPullRequests";
 import Organizations from "../components/frame/Organizations";
+import TeamMembers from "../components/TeamMembers";
 
 const Home: NextPage = () => {
   const [session] = useSession();
@@ -30,6 +30,10 @@ const Home: NextPage = () => {
       }
     }
   }, []);
+
+  if (session) {
+    console.log(`session access token: ${session.accessToken}`);
+  }
 
   return (
     <div className={styles.container}>
@@ -65,9 +69,7 @@ const Home: NextPage = () => {
                 setTeam={setTeam}
                 setLogin={setLogin}
               />
-              {/* {team && (
-                // <OpenPullRequests userLogin={login} org={org} team={team} />
-              )} */}
+              {team ? <TeamMembers org={org} team={team} /> : <></>}
             </ClientOnly>
           )}
         </Container>

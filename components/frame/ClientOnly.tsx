@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 type Props = {
-  children?: JSX.Element;
+  children?: JSX.Element | Array<JSX.Element>;
 };
 
 export default function ClientOnly({ children, ...delegated }: Props) {
