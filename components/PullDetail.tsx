@@ -26,6 +26,7 @@ import {
   FaMinusCircle,
   FaPlusCircle,
 } from "react-icons/fa";
+import { format, differenceInBusinessDays } from "date-fns";
 
 import { Comments, Repository, Pull } from "./WeeklyPulls";
 
@@ -35,6 +36,22 @@ type Props = {
 
 function WeeklyPulls(props: Props) {
   const { pull } = props;
+  const reviewRequestedAt =
+    pull.timelineItems.items.length > 0
+      ? pull.timelineItems.items[0].createdAt
+      : pull.createdAt;
+  const diffInBizDays = differenceInBusinessDays(
+    new Date(pull.mergedAt),
+    new Date(reviewRequestedAt)
+  );
+
+  // const dateFmt = "yyyy-MM-dd HH";
+  // const fmtedMergedAt = format(new Date(pull.mergedAt), dateFmt);
+  // const fmtedRequestedAt = format(new Date(reviewRequestedAt), dateFmt);
+
+  // console.log(
+  //   `merged ${fmtedMergedAt} - review requested ${fmtedRequestedAt} = ${diffInBizDays}`
+  // );
 
   return (
     <Flex pl={2} paddingBottom={1}>
@@ -49,7 +66,7 @@ function WeeklyPulls(props: Props) {
       <Spacer />
       <Wrap>
         <Tooltip label="# of lines added">
-          <Tag colorScheme="cyan">
+          <Tag colorScheme="green">
             <TagLeftIcon as={FaPlusCircle} />
             <TagLabel>{pull.additions}</TagLabel>
           </Tag>
@@ -58,6 +75,12 @@ function WeeklyPulls(props: Props) {
           <Tag colorScheme="red">
             <TagLeftIcon as={FaMinusCircle} />
             <TagLabel>{pull.deletions}</TagLabel>
+          </Tag>
+        </Tooltip>
+        <Tooltip label="biz days to merge">
+          <Tag colorScheme="purple">
+            <TagLeftIcon as={FaRegCheckCircle} />
+            <TagLabel>{diffInBizDays}</TagLabel>
           </Tag>
         </Tooltip>
         {/* {pull.numComments > 0 && (

@@ -29,16 +29,26 @@ type Comments = {
   totalCount: number;
 };
 
+type TimelineItems = {
+  items: Array<TimelineItem>;
+};
+
+type TimelineItem = {
+  type: string;
+  createdAt: string;
+};
+
 type Pull = {
   id: string;
   title: string;
   url: string;
-  createdAt: Date;
-  mergedAt: Date;
+  createdAt: string;
+  mergedAt: string;
   additions: number;
   deletions: number;
   repository: Repository;
   comments: Comments;
+  timelineItems: TimelineItems;
 };
 
 const QUERY = gql`
@@ -61,9 +71,9 @@ const QUERY = gql`
             totalCount
           }
           timelineItems(first: 1, itemTypes: READY_FOR_REVIEW_EVENT) {
-            nodes {
-              __typename
+            items: nodes {
               ... on ReadyForReviewEvent {
+                type: __typename
                 createdAt
               }
             }
@@ -83,12 +93,12 @@ function WeeklyPulls(props: Props) {
     },
   });
 
-  // get
-  // time to close PR (from non-draft to merge)
-  // # of comments on PR
-  // also...
-  // # of PR reviews
-  // # of comments on other people's PRs
+  // for each PR, get
+  //   * time to close PR (from non-draft to merge)
+  //   * # of comments on PR
+  // for each login, get
+  //   * # of PR reviews
+  //   * # of comments on other people's PRs
 
   if (loading) {
     return <p>Loading...</p>;
