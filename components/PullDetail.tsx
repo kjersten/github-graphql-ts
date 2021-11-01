@@ -86,15 +86,14 @@ function WeeklyPulls(props: Props) {
             <TagLabel>{bizDaysToMerge}</TagLabel>
           </Tag>
         </Tooltip>
-        {/* {pull.numComments > 0 && (
-            <Tooltip label="# of comments">
-              <Tag>
-                <TagLeftIcon as={FaRegComments} />
-                <TagLabel>{pull.numComments}</TagLabel>
-              </Tag>
-            </Tooltip>
-          )}
-           */}
+        {pull.comments.totalCount > 0 && (
+          <Tooltip label="# of comments">
+            <Tag>
+              <TagLeftIcon as={FaRegComments} />
+              <TagLabel>{pull.comments.totalCount}</TagLabel>
+            </Tag>
+          </Tooltip>
+        )}
       </Wrap>
     </Flex>
   );

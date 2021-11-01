@@ -93,8 +93,6 @@ function WeeklyPulls(props: Props) {
     },
   });
 
-  // for each PR, get
-  //   * # of comments on PR
   // for each login, get
   //   * # of PR reviews
   //   * # of comments on other people's PRs
