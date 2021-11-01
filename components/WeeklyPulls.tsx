@@ -94,7 +94,6 @@ function WeeklyPulls(props: Props) {
   });
 
   // for each PR, get
-  //   * time to close PR (from non-draft to merge)
   //   * # of comments on PR
   // for each login, get
   //   * # of PR reviews
