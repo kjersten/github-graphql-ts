@@ -1,16 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
-import {
-  Heading,
-  Stack,
-  Box,
-  HStack,
-  VStack,
-  FormControl,
-  FormLabel,
-  Switch,
-  Skeleton,
-  SkeletonCircle,
-} from "@chakra-ui/react";
+import { Heading, Box } from "@chakra-ui/react";
 
 import WeeklyPulls from "./WeeklyPulls";
 import { Week } from "./TeamMembers";

@@ -1,15 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
 import {
-  Heading,
-  Stack,
   Box,
-  HStack,
-  VStack,
-  FormControl,
-  FormLabel,
-  Switch,
-  Skeleton,
-  SkeletonCircle,
   Text,
   Flex,
   Spacer,
