@@ -1,18 +1,17 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import Header from "../components/frame/Header";
+import Header from "../components/topbar/Header";
 import { Container, Heading, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/client";
 
-import ClientOnly from "../components/frame/ClientOnly";
-import Organizations from "../components/frame/Organizations";
-import TeamMembers from "../components/TeamMembers";
+import ClientOnly from "../components/control_panel/ClientOnly";
+import Organizations from "../components/control_panel/Organizations";
+import TeamMembers from "../components/content/TeamMembers";
 
 const Home: NextPage = () => {
   const [session] = useSession();
-  const [login, setLogin] = useState();
   const [org, setOrg] = useState<string>();
   const [team, setTeam] = useState<string>();
 
@@ -67,7 +66,6 @@ const Home: NextPage = () => {
                 team={team}
                 setOrg={setOrg}
                 setTeam={setTeam}
-                setLogin={setLogin}
               />
               {team ? <TeamMembers org={org} team={team} /> : <></>}
             </ClientOnly>

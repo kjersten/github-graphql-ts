@@ -7,7 +7,6 @@ type Props = {
   team: string | undefined;
   setTeam: Function;
   setOrg: Function;
-  setLogin: Function;
 };
 
 type Org = {
@@ -30,7 +29,7 @@ const QUERY = gql`
 `;
 
 export default function Organizations(props: Props) {
-  const { org, team, setOrg, setTeam, setLogin } = props;
+  const { org, team, setOrg, setTeam } = props;
   const { data, loading, error } = useQuery(QUERY);
 
   if (loading) {
@@ -42,7 +41,6 @@ export default function Organizations(props: Props) {
     return null;
   }
 
-  setLogin(data.viewer.login);
   const userOrgs = data.viewer.organizations.nodes;
 
   return (
