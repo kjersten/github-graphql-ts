@@ -7,13 +7,20 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/client";
 
 import ClientOnly from "../components/control_panel/ClientOnly";
-import Organizations from "../components/control_panel/Organizations";
+import ControlPanel from "../components/control_panel/ControlPanel";
 import TeamMembers from "../components/content/TeamMembers";
+import { getDefaultDateRange } from "../utilities/date_utils";
+
+import { DateRange } from "../types";
+import { setDate } from "date-fns";
 
 const Home: NextPage = () => {
   const [session] = useSession();
+  const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange());
   const [org, setOrg] = useState<string>();
   const [team, setTeam] = useState<string>();
+
+  console.log(`date range is ${dateRange.start} to ${dateRange.end}`);
 
   useEffect(() => {
     if (window.localStorage.getItem("org") !== undefined) {
@@ -61,11 +68,13 @@ const Home: NextPage = () => {
           )}
           {session && (
             <ClientOnly>
-              <Organizations
+              <ControlPanel
                 org={org}
-                team={team}
                 setOrg={setOrg}
+                team={team}
                 setTeam={setTeam}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
               />
               {team ? <TeamMembers org={org} team={team} /> : <></>}
             </ClientOnly>

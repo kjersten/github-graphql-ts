@@ -1,11 +1,8 @@
 import { useQuery, gql } from "@apollo/client";
-import { HStack, FormControl, FormLabel, Select } from "@chakra-ui/react";
-import Teams from "./Teams";
+import { Select } from "@chakra-ui/react";
 
 type Props = {
   org: string | undefined;
-  team: string | undefined;
-  setTeam: Function;
   setOrg: Function;
 };
 
@@ -29,7 +26,7 @@ const QUERY = gql`
 `;
 
 export default function Organizations(props: Props) {
-  const { org, team, setOrg, setTeam } = props;
+  const { org, setOrg } = props;
   const { data, loading, error } = useQuery(QUERY);
 
   if (loading) {
@@ -44,28 +41,19 @@ export default function Organizations(props: Props) {
   const userOrgs = data.viewer.organizations.nodes;
 
   return (
-    <HStack spacing="5">
-      <FormControl id="gh-org" maxW="300">
-        <FormLabel>Organization</FormLabel>
-        <Select
-          placeholder="select an org"
-          value={org}
-          onChange={(e) => {
-            setOrg(e.target.value);
-            localStorage.setItem("org", e.target.value);
-          }}
-        >
-          {userOrgs.map((userOrg: Org) => (
-            <option key={userOrg.login} value={userOrg.login}>
-              {userOrg.login}
-            </option>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl id="gh-team" maxW="300">
-        <FormLabel>Team</FormLabel>
-        <Teams org={org} team={team} setTeam={setTeam} />
-      </FormControl>
-    </HStack>
+    <Select
+      placeholder="select an org"
+      value={org}
+      onChange={(e) => {
+        setOrg(e.target.value);
+        localStorage.setItem("org", e.target.value);
+      }}
+    >
+      {userOrgs.map((userOrg: Org) => (
+        <option key={userOrg.login} value={userOrg.login}>
+          {userOrg.login}
+        </option>
+      ))}
+    </Select>
   );
 }
