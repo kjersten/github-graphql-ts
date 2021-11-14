@@ -12,7 +12,6 @@ import TeamMembers from "../components/content/TeamMembers";
 import { getDefaultDateRange } from "../utilities/date_utils";
 
 import { DateRange } from "../types";
-import { setDate } from "date-fns";
 
 const Home: NextPage = () => {
   const [session] = useSession();
@@ -20,7 +19,7 @@ const Home: NextPage = () => {
   const [org, setOrg] = useState<string>();
   const [team, setTeam] = useState<string>();
 
-  console.log(`date range is ${dateRange.start} to ${dateRange.end}`);
+  console.log(`current date range is ${dateRange.start} to ${dateRange.end}`);
 
   useEffect(() => {
     if (window.localStorage.getItem("org") !== undefined) {

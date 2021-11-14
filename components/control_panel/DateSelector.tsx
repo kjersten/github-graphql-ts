@@ -1,27 +1,38 @@
-import React, { useState } from "react";
+import { Input } from "@chakra-ui/input";
 import DatePicker from "react-datepicker";
+import { DateRange } from "../../types";
+import "react-datepicker/dist/react-datepicker.css";
 
-type Dates = Array<Date | null>;
+type Dates = Date | [Date | null, Date | null] | /* for selectsRange */ null;
+type Props = {
+  dateRange: DateRange;
+  setDateRange: Function;
+};
 
-const DateSelector = () => {
-  // const [startDate, setStartDate] = useState<>(new Date());
-  // const [endDate, setEndDate] = useState(null);
-  // const onChange = (dates: Dates) => {
-  //   const [start, end] = dates;
-  //   setStartDate(start);
-  //   setEndDate(end);
-  // };
+const DateSelector = (props: Props) => {
+  const { dateRange, setDateRange } = props;
+  const { start, end } = dateRange;
+  const customInput = <Input />;
+
+  const onChange = (dates: Dates): void => {
+    if (
+      Array.isArray(dates) &&
+      typeof dates[0] === "object" &&
+      typeof dates[1] === "object"
+    ) {
+      setDateRange({ start: dates[0], end: dates[1] });
+    }
+  };
 
   return (
-    // <DatePicker
-    //   selected={startDate}
-    //   onChange={onChange}
-    //   startDate={startDate}
-    //   endDate={endDate}
-    //   selectsRange
-    //   inline
-    // />
-    <p>Date Picker goes here</p>
+    <DatePicker
+      selected={end}
+      onChange={onChange}
+      startDate={start}
+      endDate={end}
+      customInput={customInput}
+      selectsRange
+    />
   );
 };
 

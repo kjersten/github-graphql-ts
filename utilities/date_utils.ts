@@ -6,13 +6,11 @@ const dateFmt = "yyyy-MM-dd";
 
 export function getDefaultDateRange(): DateRange {
   const today = new Date();
-  let endDateRaw = previousSunday(today);
+  let end = previousSunday(today);
   if (isSunday(today)) {
-    endDateRaw = today;
+    end = today;
   }
-
-  const start = format(subWeeks(endDateRaw, 2), dateFmt);
-  const end = format(endDateRaw, dateFmt);
+  const start = subWeeks(end, 2);
 
   return { start, end };
 }

@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function ControlPanel(props: Props) {
-  const { org, team, setOrg, setTeam } = props;
+  const { org, team, dateRange, setOrg, setTeam, setDateRange } = props;
 
   return (
     <HStack spacing="5">
@@ -28,7 +28,7 @@ export default function ControlPanel(props: Props) {
       </FormControl>
       <FormControl>
         <FormLabel>Date Range</FormLabel>
-        <DateSelector />
+        <DateSelector dateRange={dateRange} setDateRange={setDateRange} />
       </FormControl>
     </HStack>
   );
