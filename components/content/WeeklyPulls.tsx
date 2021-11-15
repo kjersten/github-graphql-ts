@@ -1,24 +1,14 @@
 import { useQuery, gql } from "@apollo/client";
-import {
-  Heading,
-  Stack,
-  Box,
-  HStack,
-  VStack,
-  FormControl,
-  FormLabel,
-  Switch,
-  Skeleton,
-  SkeletonCircle,
-} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import PullDetail from "./PullDetail";
-import { Week } from "./TeamMembers";
+import { DateRange } from "../../types";
+import { dateToString } from "../../utilities/date_utils";
 
 type Props = {
   org: string | undefined;
   login: string | undefined;
-  week: Week;
+  week: DateRange;
 };
 
 type Repository = {
@@ -86,10 +76,12 @@ const QUERY = gql`
 
 function WeeklyPulls(props: Props) {
   const { org, login, week } = props;
+  const startDate = dateToString(week.start);
+  const endDate = dateToString(week.end);
 
   const { data, loading, error } = useQuery(QUERY, {
     variables: {
-      searchQuery: `author:${login} org:${org} is:pr merged:${week.beginDate}..${week.endDate}`,
+      searchQuery: `author:${login} org:${org} is:pr merged:${startDate}..${endDate}`,
     },
   });
 
@@ -105,13 +97,13 @@ function WeeklyPulls(props: Props) {
     console.error(error);
     return null;
   }
-  console.log(data);
+  // console.log(data);
   const numPrs = data.search.issueCount;
   const prs = data.search.nodes;
 
   return (
     <Box>
-      {week.beginDate} - {week.endDate} <em>({numPrs} PRs merged)</em>
+      {startDate} - {endDate} <em>({numPrs} PRs merged)</em>
       {prs.map((pull: Pull) => (
         <PullDetail key={pull.id} pull={pull} />
       ))}
@@ -119,5 +111,5 @@ function WeeklyPulls(props: Props) {
   );
 }
 
-export type { Pull, Comments, Repository };
+export type { Pull };
 export default WeeklyPulls;

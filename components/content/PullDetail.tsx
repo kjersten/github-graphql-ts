@@ -1,4 +1,3 @@
-import { useQuery, gql } from "@apollo/client";
 import {
   Box,
   Text,
@@ -17,9 +16,9 @@ import {
   FaMinusCircle,
   FaPlusCircle,
 } from "react-icons/fa";
-import { format, differenceInBusinessDays } from "date-fns";
+import { differenceInBusinessDays } from "date-fns";
 
-import { Comments, Repository, Pull } from "./WeeklyPulls";
+import { Pull } from "./WeeklyPulls";
 
 type Props = {
   pull: Pull;

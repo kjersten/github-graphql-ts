@@ -15,11 +15,9 @@ import { DateRange } from "../types";
 
 const Home: NextPage = () => {
   const [session] = useSession();
-  const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange());
   const [org, setOrg] = useState<string>();
   const [team, setTeam] = useState<string>();
-
-  console.log(`current date range is ${dateRange.start} to ${dateRange.end}`);
+  const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange());
 
   useEffect(() => {
     if (window.localStorage.getItem("org") !== undefined) {
@@ -75,7 +73,11 @@ const Home: NextPage = () => {
                 dateRange={dateRange}
                 setDateRange={setDateRange}
               />
-              {team ? <TeamMembers org={org} team={team} /> : <></>}
+              {team ? (
+                <TeamMembers org={org} team={team} dateRange={dateRange} />
+              ) : (
+                <></>
+              )}
             </ClientOnly>
           )}
         </Container>
