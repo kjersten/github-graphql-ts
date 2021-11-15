@@ -8,6 +8,7 @@ import { isWeekend } from "date-fns";
 
 type Dates = Date | [Date | null, Date | null] | /* for selectsRange */ null;
 type Props = {
+  dateRange: DateRange;
   setDateRange: Function;
 };
 
