@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import {
   FaRegComments,
-  FaRegCheckCircle,
+  FaCalendarCheck,
   FaMinusCircle,
   FaPlusCircle,
 } from "react-icons/fa";
@@ -58,24 +58,30 @@ function WeeklyPulls(props: Props) {
       </Box>
       <Spacer />
       <Wrap>
-        <Tooltip label="# of lines added">
-          <Tag colorScheme="green">
-            <TagLeftIcon as={FaPlusCircle} />
-            <TagLabel>{pull.additions}</TagLabel>
-          </Tag>
-        </Tooltip>
-        <Tooltip label="# of lines removed">
-          <Tag colorScheme="red">
-            <TagLeftIcon as={FaMinusCircle} />
-            <TagLabel>{pull.deletions}</TagLabel>
-          </Tag>
-        </Tooltip>
-        <Tooltip label="biz days to merge">
-          <Tag colorScheme="purple">
-            <TagLeftIcon as={FaRegCheckCircle} />
-            <TagLabel>{bizDaysToMerge}</TagLabel>
-          </Tag>
-        </Tooltip>
+        {pull.additions + pull.deletions > 250 && (
+          <>
+            <Tooltip label="# of lines added">
+              <Tag colorScheme="green">
+                <TagLeftIcon as={FaPlusCircle} />
+                <TagLabel>{pull.additions}</TagLabel>
+              </Tag>
+            </Tooltip>
+            <Tooltip label="# of lines removed">
+              <Tag colorScheme="red">
+                <TagLeftIcon as={FaMinusCircle} />
+                <TagLabel>{pull.deletions}</TagLabel>
+              </Tag>
+            </Tooltip>
+          </>
+        )}
+        {bizDaysToMerge > 2 && (
+          <Tooltip label="biz days to merge">
+            <Tag colorScheme="purple">
+              <TagLeftIcon as={FaCalendarCheck} />
+              <TagLabel>{bizDaysToMerge}</TagLabel>
+            </Tag>
+          </Tooltip>
+        )}
         {pull.comments.totalCount > 0 && (
           <Tooltip label="# of comments">
             <Tag>
