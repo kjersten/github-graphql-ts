@@ -11,23 +11,6 @@ type Props = {
   week: DateRange;
 };
 
-type Repository = {
-  name: string;
-};
-
-type Comments = {
-  totalCount: number;
-};
-
-type TimelineItems = {
-  items: Array<TimelineItem>;
-};
-
-type TimelineItem = {
-  type: string;
-  createdAt: string;
-};
-
 const QUERY = gql`
   query PRs($searchQuery: String!) {
     search(query: $searchQuery, type: ISSUE, last: 100) {
@@ -61,7 +44,7 @@ const QUERY = gql`
   }
 `;
 
-function WeeklyPulls(props: Props) {
+function PullsByWeek(props: Props) {
   const { org, login, week } = props;
   const startDate = dateToString(week.start);
   const endDate = dateToString(week.end);
@@ -72,10 +55,6 @@ function WeeklyPulls(props: Props) {
     },
   });
 
-  // for each login, get
-  //   * # of PR reviews
-  //   * # of comments on other people's PRs
-
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -84,7 +63,7 @@ function WeeklyPulls(props: Props) {
     console.error(error);
     return null;
   }
-  // console.log(data);
+
   const numPrs = data.search.issueCount;
   const prs = data.search.nodes;
 
@@ -98,4 +77,4 @@ function WeeklyPulls(props: Props) {
   );
 }
 
-export default WeeklyPulls;
+export default PullsByWeek;
