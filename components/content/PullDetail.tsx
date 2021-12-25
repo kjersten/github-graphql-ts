@@ -18,7 +18,7 @@ import {
 } from "react-icons/fa";
 import { differenceInBusinessDays } from "date-fns";
 
-import { Pull } from "./WeeklyPulls";
+import { Pull } from "./PullsByWeek";
 
 type Props = {
   pull: Pull;
@@ -48,7 +48,7 @@ function WeeklyPulls(props: Props) {
 
   return (
     <Flex pl={2} paddingBottom={1}>
-      <Box ml="3" maxWidth="600">
+      <Box ml="3" maxWidth="550">
         <Text isTruncated>
           [{pull.repository.name}]{" "}
           <Link href={pull.url} color="blue.500" isExternal>

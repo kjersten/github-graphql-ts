@@ -1,9 +1,10 @@
 import { useQuery, gql } from "@apollo/client";
 import { format, subWeeks, previousSunday } from "date-fns";
-import { Box } from "@chakra-ui/layout";
+import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 
-import TeamMember from "./TeamMember";
 import { DateRange } from "../../types";
+import TeamMemberTitle from "./TeamMemberTitle";
+import PullsForRange from "./PullsForRange";
 
 type Props = {
   org: string | undefined;
@@ -50,15 +51,34 @@ function TeamMembers(props: Props) {
 
   return (
     <Box paddingTop={5}>
-      {members.map((member: Member) => (
-        <TeamMember
-          key={member.login}
-          login={member.login}
-          name={member.name}
-          org={org}
-          dateRange={dateRange}
-        />
-      ))}
+      <Tabs>
+        <TabList>
+          <Tab>Pulls</Tab>
+          <Tab>Comments</Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            {members.map((member: Member) => (
+              <Box paddingBottom={5} key={member.login}>
+                <TeamMemberTitle
+                  login={member.login}
+                  name={member.name}
+                  org={org}
+                />
+                <PullsForRange
+                  org={org}
+                  login={member.login}
+                  dateRange={dateRange}
+                />
+              </Box>
+            ))}
+          </TabPanel>
+          <TabPanel>
+            <p>Comments will go here</p>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Box>
   );
 }
