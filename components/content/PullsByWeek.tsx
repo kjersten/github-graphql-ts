@@ -2,7 +2,7 @@ import { useQuery, gql } from "@apollo/client";
 import { Box } from "@chakra-ui/react";
 
 import PullDetail from "./PullDetail";
-import { DateRange } from "../../types";
+import { DateRange, Pull } from "../../types";
 import { dateToString } from "../../utilities/date_utils";
 
 type Props = {
@@ -26,19 +26,6 @@ type TimelineItems = {
 type TimelineItem = {
   type: string;
   createdAt: string;
-};
-
-type Pull = {
-  id: string;
-  title: string;
-  url: string;
-  createdAt: string;
-  mergedAt: string;
-  additions: number;
-  deletions: number;
-  repository: Repository;
-  comments: Comments;
-  timelineItems: TimelineItems;
 };
 
 const QUERY = gql`
@@ -111,5 +98,4 @@ function WeeklyPulls(props: Props) {
   );
 }
 
-export type { Pull };
 export default WeeklyPulls;

@@ -16,9 +16,9 @@ import {
   FaMinusCircle,
   FaPlusCircle,
 } from "react-icons/fa";
-import { differenceInBusinessDays } from "date-fns";
 
-import { Pull } from "./PullsByWeek";
+import { differenceInBusinessDays } from "date-fns";
+import { Pull } from "../../types";
 
 type Props = {
   pull: Pull;
