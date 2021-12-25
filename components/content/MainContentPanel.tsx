@@ -33,7 +33,7 @@ const QUERY = gql`
   }
 `;
 
-function TeamMembers(props: Props) {
+function MainContentPanel(props: Props) {
   const { org, team, dateRange } = props;
   const { data, loading, error } = useQuery(QUERY, {
     variables: { org: org, team: team },
@@ -104,4 +104,4 @@ function TeamMembers(props: Props) {
   );
 }
 
-export default TeamMembers;
+export default MainContentPanel;

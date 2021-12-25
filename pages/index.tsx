@@ -8,7 +8,7 @@ import { useSession } from "next-auth/client";
 
 import ClientOnly from "../components/control_panel/ClientOnly";
 import ControlPanel from "../components/control_panel/ControlPanel";
-import TeamMembers from "../components/content/TeamMembers";
+import MainContentPanel from "../components/content/MainContentPanel";
 import { getDefaultDateRange } from "../utilities/date_utils";
 
 import { DateRange } from "../types";
@@ -74,7 +74,7 @@ const Home: NextPage = () => {
                 setDateRange={setDateRange}
               />
               {team ? (
-                <TeamMembers org={org} team={team} dateRange={dateRange} />
+                <MainContentPanel org={org} team={team} dateRange={dateRange} />
               ) : (
                 <></>
               )}
