@@ -3,7 +3,6 @@ import { Box } from "@chakra-ui/react";
 
 import PullDetail from "./PullDetail";
 import { DateRange, Pull } from "../../types";
-import { dateToString } from "../../utilities/date_utils";
 
 type Props = {
   org: string | undefined;
@@ -46,12 +45,10 @@ const QUERY = gql`
 
 function PullsByWeek(props: Props) {
   const { org, login, week } = props;
-  const startDate = dateToString(week.start);
-  const endDate = dateToString(week.end);
 
   const { data, loading, error } = useQuery(QUERY, {
     variables: {
-      searchQuery: `author:${login} org:${org} is:pr merged:${startDate}..${endDate}`,
+      searchQuery: `author:${login} org:${org} is:pr merged:${week.startString}..${week.endString}`,
     },
   });
 
@@ -69,7 +66,7 @@ function PullsByWeek(props: Props) {
 
   return (
     <Box>
-      {startDate} - {endDate} <em>({numPrs} PRs merged)</em>
+      {week.startString} - {week.endString} <em>({numPrs} PRs merged)</em>
       {prs.map((pull: Pull) => (
         <PullDetail key={pull.id} pull={pull} />
       ))}

@@ -17,15 +17,24 @@ export function getDefaultDateRange(): DateRange {
     end = today;
   }
   const start = subWeeks(end, 2);
+  const startString = dateToString(start);
+  const endString = dateToString(end);
 
-  return { start, end };
+  return { start, end, startString, endString };
 }
 
 export function parseWeeks(dateRange: DateRange): Array<DateRange> {
   const sundays = eachWeekOfInterval(dateRange);
   return sundays.reduce((acc: Array<DateRange>, curr, currIndex) => {
     if (currIndex !== 0) {
-      acc.push({ start: sundays[currIndex - 1], end: curr });
+      const start = sundays[currIndex - 1];
+      const end = curr;
+      acc.push({
+        start,
+        end,
+        startString: dateToString(start),
+        endString: dateToString(end),
+      });
     }
     return acc;
   }, []);

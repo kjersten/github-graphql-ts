@@ -1,6 +1,8 @@
 export interface DateRange {
   start: Date;
   end: Date;
+  startString: string;
+  endString: string;
 }
 
 export interface Pull {

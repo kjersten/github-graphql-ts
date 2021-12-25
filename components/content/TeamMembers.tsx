@@ -70,7 +70,7 @@ function TeamMembers(props: Props) {
                 />
                 {weeks.map((week: DateRange) => (
                   <PullsByWeek
-                    key={member.login + week.start.toString() + "pulls"}
+                    key={member.login + week.startString + "pulls"}
                     org={org}
                     login={member.login}
                     week={week}
@@ -89,7 +89,7 @@ function TeamMembers(props: Props) {
                 />
                 {weeks.map((week: DateRange) => (
                   <CommentsByWeek
-                    key={member.login + week.start.toString() + "comments"}
+                    key={member.login + week.startString + "comments"}
                     org={org}
                     login={member.login}
                     week={week}
