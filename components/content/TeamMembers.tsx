@@ -1,10 +1,11 @@
 import { useQuery, gql } from "@apollo/client";
-import { format, subWeeks, previousSunday } from "date-fns";
+import { parseWeeks } from "../../utilities/date_utils";
 import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 
 import { DateRange } from "../../types";
 import TeamMemberTitle from "./TeamMemberTitle";
-import PullsForRange from "./PullsForRange";
+import PullsByWeek from "./PullsByWeek";
+import CommentsByWeek from "./CommentsByWeek";
 
 type Props = {
   org: string | undefined;
@@ -48,6 +49,7 @@ function TeamMembers(props: Props) {
   }
 
   const members = data.organization.team.members.nodes;
+  const weeks = parseWeeks(dateRange);
 
   return (
     <Box paddingTop={5}>
@@ -66,16 +68,35 @@ function TeamMembers(props: Props) {
                   name={member.name}
                   org={org}
                 />
-                <PullsForRange
-                  org={org}
-                  login={member.login}
-                  dateRange={dateRange}
-                />
+                {weeks.map((week: DateRange) => (
+                  <PullsByWeek
+                    key={member.login + week.start.toString() + "pulls"}
+                    org={org}
+                    login={member.login}
+                    week={week}
+                  />
+                ))}
               </Box>
             ))}
           </TabPanel>
           <TabPanel>
-            <p>Comments will go here</p>
+            {members.map((member: Member) => (
+              <Box paddingBottom={5} key={member.login}>
+                <TeamMemberTitle
+                  login={member.login}
+                  name={member.name}
+                  org={org}
+                />
+                {weeks.map((week: DateRange) => (
+                  <CommentsByWeek
+                    key={member.login + week.start.toString() + "comments"}
+                    org={org}
+                    login={member.login}
+                    week={week}
+                  />
+                ))}
+              </Box>
+            ))}
           </TabPanel>
         </TabPanels>
       </Tabs>
