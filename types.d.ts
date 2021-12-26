@@ -7,6 +7,7 @@ export interface DateRange {
 
 export interface Pull {
   id: string;
+  author: Actor;
   title: string;
   url: string;
   createdAt: string;
@@ -15,6 +16,7 @@ export interface Pull {
   deletions: number;
   repository: Repository;
   comments: Comments;
+  reviews: Reviews;
   reviewThreads: ReviewThreads;
   timelineItems: TimelineItems;
 }

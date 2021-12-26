@@ -19,6 +19,9 @@ const QUERY = gql`
           id
           url
           title
+          author {
+            login
+          }
           createdAt
           mergedAt
           additions
@@ -27,6 +30,9 @@ const QUERY = gql`
             name
           }
           comments(first: 1) {
+            totalCount
+          }
+          reviews(last: 1) {
             totalCount
           }
           reviewThreads(first: 1) {

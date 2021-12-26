@@ -42,7 +42,7 @@ function calcBizDaysToMerge(pull: Pull) {
   );
 }
 
-function WeeklyPulls(props: Props) {
+function PullDetail(props: Props) {
   const { pull } = props;
   const bizDaysToMerge = calcBizDaysToMerge(pull);
 
@@ -95,4 +95,4 @@ function WeeklyPulls(props: Props) {
   );
 }
 
-export default WeeklyPulls;
+export default PullDetail;
