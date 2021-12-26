@@ -56,7 +56,7 @@ function MainContentPanel(props: Props) {
       <Tabs>
         <TabList>
           <Tab>Pulls</Tab>
-          <Tab>Comments</Tab>
+          <Tab>Reviews</Tab>
         </TabList>
 
         <TabPanels>
