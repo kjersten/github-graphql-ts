@@ -82,11 +82,11 @@ function WeeklyPulls(props: Props) {
             </Tag>
           </Tooltip>
         )}
-        {pull.comments.totalCount > 0 && (
-          <Tooltip label="# of comments">
+        {pull.reviewThreads.totalCount > 0 && (
+          <Tooltip label="# of review threads">
             <Tag>
               <TagLeftIcon as={FaRegComments} />
-              <TagLabel>{pull.comments.totalCount}</TagLabel>
+              <TagLabel>{pull.reviewThreads.totalCount}</TagLabel>
             </Tag>
           </Tooltip>
         )}

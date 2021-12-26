@@ -29,6 +29,9 @@ const QUERY = gql`
           comments(first: 1) {
             totalCount
           }
+          reviewThreads(first: 1) {
+            totalCount
+          }
           timelineItems(first: 1, itemTypes: READY_FOR_REVIEW_EVENT) {
             items: nodes {
               ... on ReadyForReviewEvent {

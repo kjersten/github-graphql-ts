@@ -15,5 +15,6 @@ export interface Pull {
   deletions: number;
   repository: Repository;
   comments: Comments;
+  reviewThreads: ReviewThreads;
   timelineItems: TimelineItems;
 }
