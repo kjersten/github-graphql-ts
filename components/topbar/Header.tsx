@@ -5,7 +5,6 @@ import {
   HStack,
   Spacer,
   Button,
-  Avatar,
   Heading,
   Text,
   FormControl,
@@ -29,7 +28,6 @@ export default function Header() {
         {!session && (
           <Box>
             <Button
-              href={`/api/auth/signin`}
               onClick={(e) => {
                 e.preventDefault();
                 signIn();
@@ -45,12 +43,12 @@ export default function Header() {
               {/* <Avatar name={session.user.name} src={session.user.image} /> */}
             </Box>
             <Box>
-              Kjersten Elias
-              {/* <Text as="strong">{session.user.email || session.user.name}</Text> */}
+              <Text as="strong">
+                {session?.user?.email || session?.user?.name}
+              </Text>
             </Box>
             <Box>
               <Button
-                href={`/api/auth/signout`}
                 onClick={(e) => {
                   e.preventDefault();
                   signOut();

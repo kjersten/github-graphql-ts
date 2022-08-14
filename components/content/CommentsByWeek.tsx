@@ -11,36 +11,23 @@ type Props = {
 };
 
 const QUERY = gql`
-  query comments($searchQuery: String!, $reviewer: String!) {
+  query comments($searchQuery: String!) {
     search(query: $searchQuery, type: ISSUE, last: 100) {
       issueCount
       nodes {
         ... on PullRequest {
           id
+          url
+          title
           author {
             login
           }
-          url
-          title
           createdAt
           mergedAt
           additions
           deletions
           repository {
             name
-          }
-          reviews(author: $reviewer, last: 1) {
-            nodes {
-              ... on PullRequestReview {
-                author {
-                  login
-                }
-                state
-              }
-            }
-          }
-          comments(first: 1) {
-            totalCount
           }
           reviewThreads(last: 20) {
             totalCount
@@ -53,17 +40,19 @@ const QUERY = gql`
                       author {
                         login
                       }
-                      bodyText
                     }
                   }
                 }
               }
             }
           }
-          timelineItems(first: 1, itemTypes: READY_FOR_REVIEW_EVENT) {
+          readyForReview: timelineItems(
+            first: 1
+            itemTypes: READY_FOR_REVIEW_EVENT
+          ) {
             nodes {
-              __typename
               ... on ReadyForReviewEvent {
+                type: __typename
                 createdAt
               }
             }
@@ -83,7 +72,6 @@ function CommentsByWeek(props: Props) {
   const { data, loading, error } = useQuery(QUERY, {
     variables: {
       searchQuery: `org:${org} reviewed-by:${login} -author:${login} is:pr updated:${week.startString}..${week.endString}`,
-      reviewer: login,
     },
   });
 

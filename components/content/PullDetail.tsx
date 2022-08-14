@@ -26,8 +26,8 @@ type Props = {
 
 function calcBizDaysToMerge(pull: Pull) {
   const reviewRequestedAt =
-    pull.timelineItems.items.length > 0
-      ? pull.timelineItems.items[0].createdAt
+    pull.readyForReview.nodes.length > 0
+      ? pull.readyForReview.nodes[0].createdAt
       : pull.createdAt;
   // const dateFmt = "yyyy-MM-dd HH";
   // const fmtedMergedAt = format(new Date(pull.mergedAt), dateFmt);
@@ -82,7 +82,7 @@ function PullDetail(props: Props) {
             </Tag>
           </Tooltip>
         )}
-        {pull.reviewThreads.totalCount > 0 && (
+        {pull.reviewThreads && pull.reviewThreads.totalCount > 0 && (
           <Tooltip label="# of review threads">
             <Tag>
               <TagLeftIcon as={FaRegComments} />

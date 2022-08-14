@@ -17,6 +17,7 @@ const Home: NextPage = () => {
   const [session] = useSession();
   const [org, setOrg] = useState<string>();
   const [team, setTeam] = useState<string>();
+  const [teamFullName, setTeamFullName] = useState<string>();
   const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange());
 
   useEffect(() => {
@@ -30,6 +31,12 @@ const Home: NextPage = () => {
       const storedTeam = window.localStorage.getItem("team");
       if (storedTeam !== null) {
         setTeam(storedTeam);
+      }
+    }
+    if (window.localStorage.getItem("teamFullName") !== undefined) {
+      const storedTeamFull = window.localStorage.getItem("teamFullName");
+      if (storedTeamFull !== null) {
+        setTeamFullName(storedTeamFull);
       }
     }
   }, []);
@@ -70,11 +77,17 @@ const Home: NextPage = () => {
                 setOrg={setOrg}
                 team={team}
                 setTeam={setTeam}
+                setTeamFullName={setTeamFullName}
                 dateRange={dateRange}
                 setDateRange={setDateRange}
               />
               {team ? (
-                <MainContentPanel org={org} team={team} dateRange={dateRange} />
+                <MainContentPanel
+                  org={org}
+                  team={team}
+                  teamFullName={teamFullName}
+                  dateRange={dateRange}
+                />
               ) : (
                 <></>
               )}

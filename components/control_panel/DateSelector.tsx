@@ -1,4 +1,4 @@
-import { Input } from "@chakra-ui/input";
+import { Input } from "@chakra-ui/react";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import { DateRange } from "../../types";

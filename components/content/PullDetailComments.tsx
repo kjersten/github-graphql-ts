@@ -22,10 +22,14 @@ type Props = {
 function PullDetailComments(props: Props) {
   const { pull, reviewer } = props;
   let userCommentCount = 0;
-  if (pull.reviewThreads.totalCount > 0) {
-    const reviewThreads = pull.reviewThreads.nodes;
-    reviewThreads.forEach((thread: any) => {
-      // get the number of comments where the author is the reviewer
+  if (
+    pull.reviewThreads &&
+    pull.reviewThreads.totalCount > 0 &&
+    pull.reviewThreads.nodes !== null
+  ) {
+    const threads = pull.reviewThreads.nodes;
+    threads.forEach((thread: any) => {
+      // get the number of comments this eng left on any of the threads
       if (thread.comments.totalCount > 0) {
         const comments = thread.comments.nodes;
         comments.forEach((comment: any) => {
@@ -57,7 +61,7 @@ function PullDetailComments(props: Props) {
             </Tag>
           </Tooltip>
         )}
-        {pull.reviewThreads.totalCount > 0 && (
+        {pull.reviewThreads && pull.reviewThreads.totalCount > 0 && (
           <Tooltip label="# of review threads">
             <Tag>
               <TagLeftIcon as={FaRegComments} />

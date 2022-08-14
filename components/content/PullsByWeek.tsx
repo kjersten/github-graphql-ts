@@ -29,17 +29,14 @@ const QUERY = gql`
           repository {
             name
           }
-          comments(first: 1) {
-            totalCount
-          }
-          reviews(last: 1) {
-            totalCount
-          }
           reviewThreads(first: 1) {
             totalCount
           }
-          timelineItems(first: 1, itemTypes: READY_FOR_REVIEW_EVENT) {
-            items: nodes {
+          readyForReview: timelineItems(
+            first: 1
+            itemTypes: READY_FOR_REVIEW_EVENT
+          ) {
+            nodes {
               ... on ReadyForReviewEvent {
                 type: __typename
                 createdAt

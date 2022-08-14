@@ -5,10 +5,12 @@ type Props = {
   org: string | undefined;
   team: string | undefined;
   setTeam: Function;
+  setTeamFullName: Function;
 };
 
 type Team = {
   slug: string;
+  combinedSlug: string | null;
 };
 
 const QUERY = gql`
@@ -30,7 +32,7 @@ const QUERY = gql`
 `;
 
 export default function Organizations(props: Props) {
-  const { org, team, setTeam } = props;
+  const { org, team, setTeam, setTeamFullName } = props;
   const { data, loading, error } = useQuery(QUERY, {
     variables: { org: org },
   });
@@ -53,10 +55,17 @@ export default function Organizations(props: Props) {
       onChange={(e) => {
         setTeam(e.target.value);
         localStorage.setItem("team", e.target.value);
+        const fullName = e.target.selectedOptions[0].dataset.fullname ?? "";
+        setTeamFullName(fullName);
+        localStorage.setItem("teamFullName", fullName);
       }}
     >
       {teams.map((team: Team) => (
-        <option key={team.slug} value={team.slug}>
+        <option
+          key={team.slug}
+          value={team.slug}
+          data-fullname={team.combinedSlug}
+        >
           {team.slug}
         </option>
       ))}

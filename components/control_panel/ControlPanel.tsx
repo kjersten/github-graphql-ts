@@ -1,4 +1,4 @@
-import { HStack, FormControl, FormLabel, Select } from "@chakra-ui/react";
+import { HStack, FormControl, FormLabel } from "@chakra-ui/react";
 import Organizations from "./Organizations";
 import Teams from "./Teams";
 import { DateRange } from "../../types";
@@ -11,10 +11,19 @@ type Props = {
   setTeam: Function;
   setOrg: Function;
   setDateRange: Function;
+  setTeamFullName: Function;
 };
 
 export default function ControlPanel(props: Props) {
-  const { org, team, dateRange, setOrg, setTeam, setDateRange } = props;
+  const {
+    org,
+    team,
+    dateRange,
+    setOrg,
+    setTeam,
+    setDateRange,
+    setTeamFullName,
+  } = props;
 
   return (
     <HStack spacing="5">
@@ -24,7 +33,12 @@ export default function ControlPanel(props: Props) {
       </FormControl>
       <FormControl id="gh-team" maxW="300">
         <FormLabel>Team</FormLabel>
-        <Teams org={org} team={team} setTeam={setTeam} />
+        <Teams
+          org={org}
+          team={team}
+          setTeam={setTeam}
+          setTeamFullName={setTeamFullName}
+        />
       </FormControl>
       <FormControl>
         <FormLabel>Date Range</FormLabel>

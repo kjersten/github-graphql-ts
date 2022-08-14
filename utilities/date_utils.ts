@@ -4,6 +4,7 @@ import {
   previousSunday,
   isSunday,
   eachWeekOfInterval,
+  differenceInHours,
 } from "date-fns";
 
 import { DateRange } from "../types";
@@ -42,4 +43,16 @@ export function parseWeeks(dateRange: DateRange): Array<DateRange> {
 
 export function dateToString(date: Date): string {
   return format(date, dateFmt);
+}
+
+export function diffInHours(
+  dateString1: string | null,
+  dateString2: string | null
+): number {
+  if (!dateString1 || !dateString2) {
+    return -1;
+  }
+  const date1 = new Date(dateString1);
+  const date2 = new Date(dateString2);
+  return differenceInHours(date1, date2);
 }

@@ -6,10 +6,12 @@ import { DateRange } from "../../types";
 import TeamMemberTitle from "./TeamMemberTitle";
 import PullsByWeek from "./PullsByWeek";
 import CommentsByWeek from "./CommentsByWeek";
+import ReviewRequestsByWeek from "./ReviewRequestsByWeek";
 
 type Props = {
   org: string | undefined;
   team: string | undefined;
+  teamFullName: string | undefined;
   dateRange: DateRange;
 };
 
@@ -34,7 +36,7 @@ const QUERY = gql`
 `;
 
 function MainContentPanel(props: Props) {
-  const { org, team, dateRange } = props;
+  const { org, team, teamFullName, dateRange } = props;
   const { data, loading, error } = useQuery(QUERY, {
     variables: { org: org, team: team },
   });
@@ -57,17 +59,14 @@ function MainContentPanel(props: Props) {
         <TabList>
           <Tab>Pulls</Tab>
           <Tab>Reviews</Tab>
+          <Tab>Time to Review</Tab>
         </TabList>
 
         <TabPanels>
           <TabPanel>
             {members.map((member: Member) => (
               <Box paddingBottom={5} key={member.login}>
-                <TeamMemberTitle
-                  login={member.login}
-                  name={member.name}
-                  org={org}
-                />
+                <TeamMemberTitle login={member.login} name={member.name} />
                 {weeks.map((week: DateRange) => (
                   <PullsByWeek
                     key={member.login + week.startString + "pulls"}
@@ -82,11 +81,7 @@ function MainContentPanel(props: Props) {
           <TabPanel>
             {members.map((member: Member) => (
               <Box paddingBottom={5} key={member.login}>
-                <TeamMemberTitle
-                  login={member.login}
-                  name={member.name}
-                  org={org}
-                />
+                <TeamMemberTitle login={member.login} name={member.name} />
                 {weeks.map((week: DateRange) => (
                   <CommentsByWeek
                     key={member.login + week.startString + "comments"}
@@ -96,6 +91,16 @@ function MainContentPanel(props: Props) {
                   />
                 ))}
               </Box>
+            ))}
+          </TabPanel>
+          <TabPanel>
+            {weeks.map((week: DateRange) => (
+              <ReviewRequestsByWeek
+                key={team + week.startString + "reviewRequests"}
+                org={org}
+                teamFullName={teamFullName}
+                week={week}
+              />
             ))}
           </TabPanel>
         </TabPanels>

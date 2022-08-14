@@ -1,13 +1,12 @@
-import { Heading, Box } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 
 type Props = {
-  org: string | undefined;
   login: string | undefined;
   name: string | undefined;
 };
 
 function TeamMemberTitle(props: Props) {
-  const { org, login, name } = props;
+  const { login, name } = props;
 
   return (
     <Heading as="h2" size="sm">
