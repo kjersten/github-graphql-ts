@@ -127,7 +127,7 @@ function ReviewRequestsByWeek(props: Props) {
   const { org, teamFullName, week } = props;
   const { data, loading, error } = useQuery(QUERY, {
     variables: {
-      searchQuery: `org:${org} is:pr merged:${week.startString}..${week.endString} team-review-requested:${teamFullName}`,
+      searchQuery: `org:${org} is:pr created:${week.startString}..${week.endString}`,
     },
   });
 
