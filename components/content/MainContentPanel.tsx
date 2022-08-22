@@ -55,7 +55,7 @@ function MainContentPanel(props: Props) {
 
   return (
     <Box paddingTop={5}>
-      <Tabs>
+      <Tabs isLazy>
         <TabList>
           <Tab>Pulls</Tab>
           <Tab>Reviews</Tab>
