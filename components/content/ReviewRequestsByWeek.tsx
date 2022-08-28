@@ -37,35 +37,22 @@ const QUERY = gql`
       issueCount
       nodes {
         ... on PullRequest {
-          state
+          __typename
+          id
+          url
+          title
           author {
+            __typename
             login
           }
-          title
-          url
           createdAt
           mergedAt
           additions
           deletions
           repository {
+            __typename
+            id
             name
-          }
-          reviews(first: 10) {
-            nodes {
-              ... on PullRequestReview {
-                createdAt
-                author {
-                  login
-                }
-                onBehalfOf(first: 1) {
-                  nodes {
-                    name
-                    slug
-                    combinedSlug
-                  }
-                }
-              }
-            }
           }
           reviewRequestedEvents: timelineItems(
             first: 10
@@ -73,11 +60,34 @@ const QUERY = gql`
           ) {
             nodes {
               ... on ReviewRequestedEvent {
-                type: __typename
+                __typename
+                id
                 createdAt
                 requestedReviewer {
-                  type: __typename
                   ... on Team {
+                    __typename
+                    id
+                    slug
+                    combinedSlug
+                  }
+                }
+              }
+            }
+          }
+          reviews(first: 10) {
+            nodes {
+              ... on PullRequestReview {
+                __typename
+                id
+                createdAt
+                author {
+                  login
+                }
+                onBehalfOf(first: 1) {
+                  nodes {
+                    __typename
+                    id
+                    name
                     slug
                     combinedSlug
                   }
@@ -128,6 +138,7 @@ function ReviewRequestsByWeek(props: Props) {
   const { data, loading, error } = useQuery(QUERY, {
     variables: {
       searchQuery: `org:${org} is:pr created:${week.startString}..${week.endString}`,
+      pollInterval: 0,
     },
   });
 
@@ -145,6 +156,7 @@ function ReviewRequestsByWeek(props: Props) {
   const prs: PullWithReviewStats[] = prsFromQuery.map((pr: Pull) =>
     addTimeToReview(pr, teamFullName || "")
   );
+  console.log(new Date().toUTCString());
   console.log(prs);
 
   return (
@@ -152,9 +164,9 @@ function ReviewRequestsByWeek(props: Props) {
       {week.startString} - {week.endString}{" "}
       <em>({numPrs} reviews requested)</em>
       {prs.map((pull: PullWithReviewStats) => (
-        <Flex pl={2} paddingBottom={1} key={pull.id + "review-request"}>
+        <Flex pl={2} paddingBottom={1} key={pull.id + "-review-request"}>
           <Box>
-            <div key={pull.id}>
+            <div key={pull.id + "-details"}>
               <Text isTruncated>
                 [{pull.repository.name}] ({pull.author.login}){" "}
                 <Link href={pull.url} color="blue.500" isExternal>

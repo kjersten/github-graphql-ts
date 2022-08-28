@@ -52,6 +52,7 @@ function MainContentPanel(props: Props) {
 
   const members = data.organization.team.members.nodes;
   const weeks = parseWeeks(dateRange);
+  const week1 = weeks[0];
 
   return (
     <Box paddingTop={5}>
@@ -94,14 +95,14 @@ function MainContentPanel(props: Props) {
             ))}
           </TabPanel>
           <TabPanel>
-            {weeks.map((week: DateRange) => (
-              <ReviewRequestsByWeek
-                key={team + week.startString + "reviewRequests"}
-                org={org}
-                teamFullName={teamFullName}
-                week={week}
-              />
-            ))}
+            {/* {weeks.map((week: DateRange) => ( */}
+            <ReviewRequestsByWeek
+              key={team + week1.startString + "-reviewRequests"}
+              org={org}
+              teamFullName={teamFullName}
+              week={week1}
+            />
+            {/* ))} */}
           </TabPanel>
         </TabPanels>
       </Tabs>

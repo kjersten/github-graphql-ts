@@ -37,6 +37,22 @@ export interface PullWithReviewStats extends Pull {
   bizDaysToMerge: number;
 }
 
+export interface TeamReviewRequests {
+  teamRequests: TeamRequest[];
+}
+
+export interface TeamRequest {
+  teamName: string;
+  reviewRequests: ReviewRequest[];
+}
+
+export interface ReviewRequest {
+  pullId: string;
+  readyAt: string;
+  reviewedAt: string | null;
+  hoursToReview: number;
+}
+
 export interface Actor {
   login: string;
 }
