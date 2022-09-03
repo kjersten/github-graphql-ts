@@ -22,8 +22,15 @@ import {
 } from "react-icons/fa";
 import { differenceInBusinessDays } from "date-fns";
 
-import { DateRange, Pull, PullWithReviewStats } from "../../types";
+import {
+  DateRange,
+  Pull,
+  TeamReviewRequest,
+  ReviewRequestedEvent,
+  PullRequestReview,
+} from "../../types";
 import { diffInHours } from "../../utilities/date_utils";
+import ReviewRequest from "./ReviewRequest";
 
 type Props = {
   org: string | undefined;
@@ -101,40 +108,71 @@ const QUERY = gql`
   }
 `;
 
-function addTimeToReview(pull: Pull, team: string): PullWithReviewStats {
-  if (!pull.reviews || !pull.reviewRequestedEvents) {
-    return {
-      ...pull,
-      readyAt: pull.createdAt,
-      reviewedAt: null,
-      hoursToReview: -1,
-      bizDaysToMerge: -1,
-    };
-  }
-  const firstRequest = pull.reviewRequestedEvents.nodes.find(
-    (request) => request.requestedReviewer.combinedSlug === team
-  );
-  const readyAt = firstRequest?.createdAt || pull.createdAt;
-  const firstReview = pull.reviews.nodes.find(
-    (review) => review.onBehalfOf.nodes[0]?.combinedSlug === team
-  );
-  const reviewedAt = firstReview?.createdAt || null;
-  const hoursToReview = diffInHours(reviewedAt, readyAt);
-  const bizDaysToMerge = differenceInBusinessDays(
-    new Date(pull.mergedAt),
-    new Date(readyAt)
-  );
-  return {
-    ...pull,
-    reviewedAt,
-    readyAt,
-    hoursToReview,
-    bizDaysToMerge,
-  };
+function registerReviewRequests(
+  prId: string,
+  reviewRequests: ReviewRequestedEvent[],
+  teamRequests: TeamReviewRequest[]
+) {
+  reviewRequests.forEach((request: ReviewRequestedEvent) => {
+    if (request.requestedReviewer.id !== null) {
+      const existingRequest = teamRequests.find(
+        (req) =>
+          req.pullId === prId && request.requestedReviewer.id === req.teamId
+      );
+      if (!existingRequest) {
+        teamRequests.push({
+          pullId: prId,
+          teamId: request.requestedReviewer.id,
+          requestedAt: request.createdAt,
+          reviewedAt: null,
+          hoursToReview: -1,
+        });
+      }
+    }
+  });
+}
+
+function registerReviews(
+  prId: string,
+  reviews: PullRequestReview[],
+  teamRequests: TeamReviewRequest[]
+) {
+  reviews.forEach((review: PullRequestReview) => {
+    if (review.onBehalfOf.nodes.length > 0) {
+      const reviewReq = teamRequests.find(
+        (req) =>
+          req.pullId === prId && review.onBehalfOf.nodes[0].id === req.teamId
+      );
+      if (reviewReq && !reviewReq.reviewedAt) {
+        reviewReq.reviewedAt = review.createdAt;
+        reviewReq.hoursToReview = diffInHours(
+          review.createdAt,
+          reviewReq.requestedAt
+        );
+      }
+    }
+  });
+}
+
+function getTeamReviewRequests(prs: Pull[]) {
+  const teamRequests: TeamReviewRequest[] = [];
+  prs.forEach((pr: Pull) => {
+    if (pr.reviewRequestedEvents !== null) {
+      registerReviewRequests(
+        pr.id,
+        pr.reviewRequestedEvents.nodes,
+        teamRequests
+      );
+    }
+    if (pr.reviews !== null) {
+      registerReviews(pr.id, pr.reviews.nodes, teamRequests);
+    }
+  });
+  return teamRequests;
 }
 
 function ReviewRequestsByWeek(props: Props) {
-  const { org, teamFullName, week } = props;
+  const { org, week } = props;
   const { data, loading, error } = useQuery(QUERY, {
     variables: {
       searchQuery: `org:${org} is:pr created:${week.startString}..${week.endString}`,
@@ -152,75 +190,20 @@ function ReviewRequestsByWeek(props: Props) {
   }
 
   const numPrs = data.search.issueCount;
-  const prsFromQuery: Pull[] = data.search.nodes;
-  const prs: PullWithReviewStats[] = prsFromQuery.map((pr: Pull) =>
-    addTimeToReview(pr, teamFullName || "")
-  );
-  console.log(new Date().toUTCString());
-  console.log(prs);
+  const prs: Pull[] = data.search.nodes;
+  console.log(`loaded batch of PRs at ${new Date().toUTCString()}`);
+  const reviewReqs = getTeamReviewRequests(prs);
 
   return (
     <Box>
       {week.startString} - {week.endString}{" "}
       <em>({numPrs} reviews requested)</em>
-      {prs.map((pull: PullWithReviewStats) => (
-        <Flex pl={2} paddingBottom={1} key={pull.id + "-review-request"}>
-          <Box>
-            <div key={pull.id + "-details"}>
-              <Text isTruncated>
-                [{pull.repository.name}] ({pull.author.login}){" "}
-                <Link href={pull.url} color="blue.500" isExternal>
-                  {pull.title}
-                </Link>
-              </Text>
-            </div>
-          </Box>
-          <Spacer />
-          <Wrap>
-            {pull.additions + pull.deletions > 250 && (
-              <>
-                <Tooltip label="# of lines added">
-                  <Tag colorScheme="green">
-                    <TagLeftIcon as={FaPlusCircle} />
-                    <TagLabel>{pull.additions}</TagLabel>
-                  </Tag>
-                </Tooltip>
-                <Tooltip label="# of lines removed">
-                  <Tag colorScheme="red">
-                    <TagLeftIcon as={FaMinusCircle} />
-                    <TagLabel>{pull.deletions}</TagLabel>
-                  </Tag>
-                </Tooltip>
-              </>
-            )}
-            {pull.bizDaysToMerge > 2 && (
-              <Tooltip label="biz days to merge">
-                <Tag colorScheme="purple">
-                  <TagLeftIcon as={FaCalendarCheck} />
-                  <TagLabel>{pull.bizDaysToMerge}</TagLabel>
-                </Tag>
-              </Tooltip>
-            )}
-            {pull.reviewThreads && pull.reviewThreads.totalCount > 0 && (
-              <Tooltip label="# of review threads">
-                <Tag>
-                  <TagLeftIcon as={FaRegComments} />
-                  <TagLabel>{pull.reviewThreads.totalCount}</TagLabel>
-                </Tag>
-              </Tooltip>
-            )}
-            <Tooltip label="hours to review">
-              <Tag colorScheme="blue">
-                <TagLeftIcon as={FaRegClock} />
-                {pull.hoursToReview == -1 ? (
-                  <TagRightIcon as={FaBan} />
-                ) : (
-                  <TagLabel>{pull.hoursToReview}</TagLabel>
-                )}
-              </Tag>
-            </Tooltip>
-          </Wrap>
-        </Flex>
+      {reviewReqs.map((revReq: TeamReviewRequest) => (
+        <ReviewRequest
+          teamReviewRequest={revReq}
+          pull={prs.find((pr: Pull) => pr.id === revReq.pullId)}
+          key={`${revReq.pullId}-${revReq.teamId}`}
+        />
       ))}
     </Box>
   );

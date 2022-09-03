@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { getSession } from "next-auth/client";
+import { ReviewRequestedEvent } from "./types";
 
 const httpLink = createHttpLink({
   uri: "https://api.github.com/graphql",
@@ -20,9 +21,10 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
+const cache = new InMemoryCache();
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: cache,
 });
 
 export default client;

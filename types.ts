@@ -30,34 +30,12 @@ export interface Pull {
   } | null;
 }
 
-export interface PullWithReviewStats extends Pull {
-  reviewedAt: string | null;
-  readyAt: string;
-  hoursToReview: number;
-  bizDaysToMerge: number;
-}
-
-export interface TeamReviewRequests {
-  teamRequests: TeamRequest[];
-}
-
-export interface TeamRequest {
-  teamName: string;
-  reviewRequests: ReviewRequest[];
-}
-
-export interface ReviewRequest {
-  pullId: string;
-  readyAt: string;
-  reviewedAt: string | null;
-  hoursToReview: number;
-}
-
 export interface Actor {
   login: string;
 }
 
 export interface Team {
+  id: string;
   name: string;
   slug: string;
   combinedSlug: string;
@@ -87,16 +65,25 @@ export interface PullRequestReviewComment {
 }
 
 export interface ReadyForReviewEvent {
-  type: string;
+  __typename: string;
   createdAt: string;
 }
 
 export interface ReviewRequestedEvent {
-  type: string;
+  __typename: string;
   createdAt: string;
   requestedReviewer: {
-    type: string;
+    __typename: string | null;
+    id: string | null;
     slug: string | null;
     combinedSlug: string | null;
   };
+}
+
+export interface TeamReviewRequest {
+  pullId: string;
+  teamId: string;
+  requestedAt: string;
+  reviewedAt: string | null;
+  hoursToReview: number;
 }
