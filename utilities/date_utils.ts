@@ -5,6 +5,7 @@ import {
   isSunday,
   eachWeekOfInterval,
   differenceInHours,
+  differenceInBusinessDays,
 } from "date-fns";
 
 import { DateRange } from "../types";
@@ -46,13 +47,27 @@ export function dateToString(date: Date): string {
 }
 
 export function diffInHours(
-  dateString1: string | null,
-  dateString2: string | null
+  laterDateString: string | null,
+  earlierDateString: string | null
 ): number {
-  if (!dateString1 || !dateString2) {
+  if (!laterDateString || !earlierDateString) {
     return -1;
   }
-  const date1 = new Date(dateString1);
-  const date2 = new Date(dateString2);
-  return differenceInHours(date1, date2);
+  const laterDate = new Date(laterDateString);
+  const earlierDate = new Date(earlierDateString);
+  return differenceInHours(laterDate, earlierDate);
+}
+
+export function diffInBizHours(
+  laterDateString: string | null,
+  earlierDateString: string | null
+): number {
+  if (!laterDateString || !earlierDateString) {
+    return -1;
+  }
+  const laterDate = new Date(laterDateString);
+  const earlierDate = new Date(earlierDateString);
+  const hoursInBizDays = 8 * differenceInBusinessDays(laterDate, earlierDate);
+
+  return hoursInBizDays;
 }
