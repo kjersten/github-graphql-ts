@@ -1,33 +1,15 @@
 import { useQuery, gql } from "@apollo/client";
-import {
-  Box,
-  Flex,
-  Link,
-  Spacer,
-  Tooltip,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  Text,
-  Wrap,
-  TagRightIcon,
-} from "@chakra-ui/react";
-import {
-  FaBan,
-  FaRegComments,
-  FaCalendarCheck,
-  FaMinusCircle,
-  FaPlusCircle,
-  FaRegClock,
-} from "react-icons/fa";
-import { differenceInBusinessDays } from "date-fns";
+import { resultKeyNameFromField } from "@apollo/client/utilities";
+import { Box, Flex, Text, Wrap } from "@chakra-ui/react";
 
 import {
   DateRange,
+  Team,
   Pull,
   TeamReviewRequest,
   ReviewRequestedEvent,
   PullRequestReview,
+  TeamGroup,
 } from "../../types";
 import { diffInHours } from "../../utilities/date_utils";
 import ReviewRequest from "./ReviewRequest";
@@ -38,7 +20,7 @@ type Props = {
   week: DateRange;
 };
 
-const QUERY = gql`
+const REVIEW_QUERY = gql`
   query reviewRequests($searchQuery: String!) {
     search(query: $searchQuery, type: ISSUE, last: 100) {
       issueCount
@@ -108,6 +90,26 @@ const QUERY = gql`
   }
 `;
 
+const TEAM_QUERY = gql`
+  query Teams($org: String!) {
+    organization(login: $org) {
+      __typename
+      id
+      name
+      login
+      teams(first: 50) {
+        nodes {
+          __typename
+          id
+          name
+          slug
+          combinedSlug
+        }
+      }
+    }
+  }
+`;
+
 function registerReviewRequests(
   prId: string,
   reviewRequests: ReviewRequestedEvent[],
@@ -154,6 +156,18 @@ function registerReviews(
   });
 }
 
+function groupTeamRequests(teams: Team[], teamRequests: TeamReviewRequest[]) {
+  const teamGroups: TeamGroup[] = [];
+  teams.forEach((team) => {
+    const thisTeamReqs = teamRequests.filter((req) => req.teamId === team.id);
+    if (thisTeamReqs.length > 0) {
+      teamGroups.push({ slug: team.slug, reqs: thisTeamReqs });
+    }
+  });
+
+  return teamGroups;
+}
+
 function getTeamReviewRequests(prs: Pull[]) {
   const teamRequests: TeamReviewRequest[] = [];
   prs.forEach((pr: Pull) => {
@@ -171,41 +185,80 @@ function getTeamReviewRequests(prs: Pull[]) {
   return teamRequests;
 }
 
+function renderTeamGroups(teamGroups: TeamGroup[], prs: Pull[]) {
+  const result = teamGroups.map((group: TeamGroup) => {
+    return (
+      <Box key={`{${group.slug}-group`} paddingBottom={5}>
+        {group.slug} - {group.reqs.length} reviews requested
+        {renderAuditLog(group.reqs, prs)}
+      </Box>
+    );
+  });
+
+  return result;
+}
+
+function renderAuditLog(reviewRequests: TeamReviewRequest[], prs: Pull[]) {
+  const result = reviewRequests.map((request: TeamReviewRequest) => {
+    const pull = prs.find((pr: Pull) => pr.id == request.pullId);
+    return (
+      <ReviewRequest
+        key={`${request.teamId}-${request.pullId}`}
+        teamReviewRequest={request}
+        pull={pull}
+      />
+    );
+  });
+
+  return result;
+}
+
 function ReviewRequestsByWeek(props: Props) {
   const { org, week } = props;
-  const { data, loading, error } = useQuery(QUERY, {
+  const {
+    data: reviewData,
+    loading: reviewLoading,
+    error: reviewError,
+  } = useQuery(REVIEW_QUERY, {
     variables: {
       searchQuery: `org:${org} is:pr created:${week.startString}..${week.endString}`,
       pollInterval: 0,
     },
   });
+  const {
+    data: teamData,
+    loading: teamLoading,
+    error: teamError,
+  } = useQuery(TEAM_QUERY, {
+    variables: { org: org },
+  });
 
-  if (loading) {
+  if (reviewLoading || teamLoading) {
     return <p>Loading...</p>;
   }
 
-  if (error) {
-    console.error(error);
+  if (reviewError || teamError) {
+    console.error(reviewError);
+    console.error(teamError);
     return null;
   }
 
-  const numPrs = data.search.issueCount;
-  const prs: Pull[] = data.search.nodes;
+  const numPrs = reviewData.search.issueCount;
+  const prs: Pull[] = reviewData.search.nodes;
   console.log(`loaded batch of PRs at ${new Date().toUTCString()}`);
   const reviewReqs = getTeamReviewRequests(prs);
-
+  const teamGroups = groupTeamRequests(
+    teamData.organization.teams.nodes,
+    reviewReqs
+  );
   return (
-    <Box>
-      {week.startString} - {week.endString}{" "}
-      <em>({numPrs} reviews requested)</em>
-      {reviewReqs.map((revReq: TeamReviewRequest) => (
-        <ReviewRequest
-          teamReviewRequest={revReq}
-          pull={prs.find((pr: Pull) => pr.id === revReq.pullId)}
-          key={`${revReq.pullId}-${revReq.teamId}`}
-        />
-      ))}
-    </Box>
+    <>
+      <Box paddingBottom={7}>
+        {week.startString} - {week.endString}{" "}
+        <em>({numPrs} reviews requested total)</em>
+      </Box>
+      {renderTeamGroups(teamGroups, prs)}
+    </>
   );
 }
 

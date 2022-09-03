@@ -87,3 +87,8 @@ export interface TeamReviewRequest {
   reviewedAt: string | null;
   hoursToReview: number;
 }
+
+export interface TeamGroup {
+  slug: string;
+  reqs: TeamReviewRequest[];
+}
