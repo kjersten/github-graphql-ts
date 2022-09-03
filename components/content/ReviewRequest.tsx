@@ -44,7 +44,7 @@ function ReviewRequest(props: Props) {
     <Flex pl={2} paddingBottom={1}>
       <Box>
         <div key={pull.id + "-details"}>
-          <Text isTruncated>
+          <Text noOfLines={1}>
             [{pull.repository.name}] ({pull.author.login}){" "}
             <Link href={pull.url} color="blue.500" isExternal>
               {pull.title}

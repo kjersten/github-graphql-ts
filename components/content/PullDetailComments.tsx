@@ -44,7 +44,7 @@ function PullDetailComments(props: Props) {
   return (
     <Flex pl={2} paddingBottom={1}>
       <Box ml="3" maxWidth="650">
-        <Text isTruncated>
+        <Text noOfLines={1}>
           [{pull.repository.name}] <em>({pull.author.login})</em>{" "}
           <Link href={pull.url} color="blue.500" isExternal>
             {pull.title}

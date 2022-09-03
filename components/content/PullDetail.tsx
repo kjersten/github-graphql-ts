@@ -49,7 +49,7 @@ function PullDetail(props: Props) {
   return (
     <Flex pl={2} paddingBottom={1}>
       <Box ml="3" maxWidth="550">
-        <Text isTruncated>
+        <Text noOfLines={1}>
           [{pull.repository.name}]{" "}
           <Link href={pull.url} color="blue.500" isExternal>
             {pull.title}
