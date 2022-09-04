@@ -1,5 +1,13 @@
 import { useQuery, gql } from "@apollo/client";
-import { Box } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatGroup,
+} from "@chakra-ui/react";
 
 import {
   DateRange,
@@ -146,12 +154,10 @@ function registerReviews(
           req.pullId === prId && review.onBehalfOf.nodes[0].id === req.teamId
       );
       if (reviewReq && !reviewReq.reviewedAt) {
-        console.log(`from ${reviewReq.requestedAt} - ${review.createdAt}`);
         const bizHours = diffInBizHours(
           review.createdAt,
           reviewReq.requestedAt
         );
-        console.log(`diff in biz hours is ${bizHours}`);
         reviewReq.reviewedAt = review.createdAt;
         reviewReq.hoursToReview = diffInHours(
           review.createdAt,
@@ -168,11 +174,41 @@ function groupTeamRequests(teams: Team[], teamRequests: TeamReviewRequest[]) {
   teams.forEach((team) => {
     const thisTeamReqs = teamRequests.filter((req) => req.teamId === team.id);
     if (thisTeamReqs.length > 0) {
-      teamGroups.push({ slug: team.slug, reqs: thisTeamReqs });
+      teamGroups.push({
+        slug: team.slug,
+        reqs: thisTeamReqs,
+        notReviewed: null,
+        avgHoursToReview: null,
+        avgBizHoursToReview: null,
+      });
     }
   });
 
   return teamGroups;
+}
+
+function calculateStats(teamGroups: TeamGroup[]) {
+  teamGroups.forEach((team) => {
+    let numNotReviewed = 0;
+    let numReviewed = 0;
+    let totalHours = 0;
+    let totalBizHours = 0;
+    team.reqs.forEach((req) => {
+      if (req.hoursToReview == -1) {
+        numNotReviewed += 1;
+      } else {
+        numReviewed += 1;
+        totalHours += req.hoursToReview;
+        totalBizHours += req.bizHoursToReview;
+      }
+    });
+    team.notReviewed = numNotReviewed;
+    if (numReviewed > 0) {
+      team.avgHoursToReview = Math.round((totalHours / numReviewed) * 10) / 10;
+      team.avgBizHoursToReview =
+        Math.round((totalBizHours / numReviewed) * 10) / 10;
+    }
+  });
 }
 
 function getTeamReviewRequests(prs: Pull[]) {
@@ -230,12 +266,33 @@ function ReviewRequestsByWeek(props: Props) {
     teamData.organization.teams.nodes,
     reviewReqs
   );
+  calculateStats(teamGroups);
 
   function renderTeamGroups(teamGroups: TeamGroup[], prs: Pull[]) {
     const result = teamGroups.map((group: TeamGroup) => {
       return (
         <Box key={`{${group.slug}-group`} paddingBottom={5}>
-          {group.slug} - {group.reqs.length} reviews requested
+          <Heading as="h3" size="lg">
+            {group.slug}
+          </Heading>
+          <StatGroup paddingBottom={3}>
+            <Stat>
+              <StatLabel>Requested</StatLabel>
+              <StatNumber>{group.reqs.length}</StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel>Not Reviewed</StatLabel>
+              <StatNumber>{group.notReviewed}</StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel>Avg Total Hours</StatLabel>
+              <StatNumber>{group.avgHoursToReview}</StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel>Avg Biz Hours to Review</StatLabel>
+              <StatNumber>{group.avgBizHoursToReview}</StatNumber>
+            </Stat>
+          </StatGroup>
           {renderAuditLog(group.reqs, prs)}
         </Box>
       );

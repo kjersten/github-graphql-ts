@@ -92,4 +92,7 @@ export interface TeamReviewRequest {
 export interface TeamGroup {
   slug: string;
   reqs: TeamReviewRequest[];
+  notReviewed: number | null;
+  avgHoursToReview: number | null;
+  avgBizHoursToReview: number | null;
 }
