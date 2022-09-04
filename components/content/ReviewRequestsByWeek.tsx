@@ -11,7 +11,7 @@ import {
   PullRequestReview,
   TeamGroup,
 } from "../../types";
-import { diffInHours } from "../../utilities/date_utils";
+import { diffInBizHours, diffInHours } from "../../utilities/date_utils";
 import ReviewRequest from "./ReviewRequest";
 
 type Props = {
@@ -128,6 +128,7 @@ function registerReviewRequests(
           requestedAt: request.createdAt,
           reviewedAt: null,
           hoursToReview: -1,
+          bizHoursToReview: -1,
         });
       }
     }
@@ -146,11 +147,18 @@ function registerReviews(
           req.pullId === prId && review.onBehalfOf.nodes[0].id === req.teamId
       );
       if (reviewReq && !reviewReq.reviewedAt) {
+        console.log(`from ${reviewReq.requestedAt} - ${review.createdAt}`);
+        const bizHours = diffInBizHours(
+          review.createdAt,
+          reviewReq.requestedAt
+        );
+        console.log(`diff in biz hours is ${bizHours}`);
         reviewReq.reviewedAt = review.createdAt;
         reviewReq.hoursToReview = diffInHours(
           review.createdAt,
           reviewReq.requestedAt
         );
+        reviewReq.bizHoursToReview = bizHours;
       }
     }
   });
@@ -183,34 +191,6 @@ function getTeamReviewRequests(prs: Pull[]) {
     }
   });
   return teamRequests;
-}
-
-function renderTeamGroups(teamGroups: TeamGroup[], prs: Pull[]) {
-  const result = teamGroups.map((group: TeamGroup) => {
-    return (
-      <Box key={`{${group.slug}-group`} paddingBottom={5}>
-        {group.slug} - {group.reqs.length} reviews requested
-        {renderAuditLog(group.reqs, prs)}
-      </Box>
-    );
-  });
-
-  return result;
-}
-
-function renderAuditLog(reviewRequests: TeamReviewRequest[], prs: Pull[]) {
-  const result = reviewRequests.map((request: TeamReviewRequest) => {
-    const pull = prs.find((pr: Pull) => pr.id == request.pullId);
-    return (
-      <ReviewRequest
-        key={`${request.teamId}-${request.pullId}`}
-        teamReviewRequest={request}
-        pull={pull}
-      />
-    );
-  });
-
-  return result;
 }
 
 function ReviewRequestsByWeek(props: Props) {
@@ -251,6 +231,35 @@ function ReviewRequestsByWeek(props: Props) {
     teamData.organization.teams.nodes,
     reviewReqs
   );
+
+  function renderTeamGroups(teamGroups: TeamGroup[], prs: Pull[]) {
+    const result = teamGroups.map((group: TeamGroup) => {
+      return (
+        <Box key={`{${group.slug}-group`} paddingBottom={5}>
+          {group.slug} - {group.reqs.length} reviews requested
+          {renderAuditLog(group.reqs, prs)}
+        </Box>
+      );
+    });
+
+    return result;
+  }
+
+  function renderAuditLog(reviewRequests: TeamReviewRequest[], prs: Pull[]) {
+    const result = reviewRequests.map((request: TeamReviewRequest) => {
+      const pull = prs.find((pr: Pull) => pr.id == request.pullId);
+      return (
+        <ReviewRequest
+          key={`${request.teamId}-${request.pullId}`}
+          teamReviewRequest={request}
+          pull={pull}
+        />
+      );
+    });
+
+    return result;
+  }
+
   return (
     <>
       <Box paddingBottom={7}>

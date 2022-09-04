@@ -18,6 +18,7 @@ import {
   FaMinusCircle,
   FaPlusCircle,
   FaRegClock,
+  FaFire,
 } from "react-icons/fa";
 
 import {
@@ -42,7 +43,7 @@ function ReviewRequest(props: Props) {
 
   return (
     <Flex pl={2} paddingBottom={1}>
-      <Box>
+      <Box maxWidth="550">
         <div key={pull.id + "-details"}>
           <Text noOfLines={1}>
             [{pull.repository.name}] ({pull.author.login}){" "}
@@ -77,6 +78,16 @@ function ReviewRequest(props: Props) {
               <TagRightIcon as={FaBan} />
             ) : (
               <TagLabel>{teamReviewRequest.hoursToReview}</TagLabel>
+            )}
+          </Tag>
+        </Tooltip>
+        <Tooltip label="biz hours to review">
+          <Tag colorScheme="pink">
+            {/* <TagLeftIcon as={FaFire} /> */}
+            {teamReviewRequest.bizHoursToReview === -1 ? (
+              <TagRightIcon as={FaBan} />
+            ) : (
+              <TagLabel>{teamReviewRequest.bizHoursToReview}</TagLabel>
             )}
           </Tag>
         </Tooltip>

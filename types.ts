@@ -86,6 +86,7 @@ export interface TeamReviewRequest {
   requestedAt: string;
   reviewedAt: string | null;
   hoursToReview: number;
+  bizHoursToReview: number;
 }
 
 export interface TeamGroup {
