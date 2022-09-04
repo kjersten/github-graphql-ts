@@ -11,23 +11,9 @@ import {
   Wrap,
   TagRightIcon,
 } from "@chakra-ui/react";
-import {
-  FaBan,
-  FaRegComments,
-  FaCalendarCheck,
-  FaMinusCircle,
-  FaPlusCircle,
-  FaRegClock,
-  FaFire,
-} from "react-icons/fa";
+import { FaBan, FaMinusCircle, FaPlusCircle, FaRegClock } from "react-icons/fa";
 
-import {
-  DateRange,
-  Pull,
-  TeamReviewRequest,
-  ReviewRequestedEvent,
-  PullRequestReview,
-} from "../../types";
+import { Pull, TeamReviewRequest } from "../../types";
 
 type Props = {
   teamReviewRequest: TeamReviewRequest;

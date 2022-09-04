@@ -13,10 +13,10 @@ import { utcToZonedTime } from "date-fns-tz";
 
 import { DateRange } from "../types";
 
-const dateFmt = "yyyy-MM-dd";
-const timeZone = "America/Los_Angeles"; // "Europe/Berlin" to verify
-const startBizHour = 9;
-const endBizHour = 17;
+const DATE_FMT = "yyyy-MM-dd";
+const TIME_ZONE = "America/Los_Angeles"; // "Europe/Berlin" to verify
+const START_BIZ_HOUR = 9;
+const END_BIZ_HOUR = 17;
 
 export function getDefaultDateRange(): DateRange {
   const today = new Date();
@@ -49,7 +49,7 @@ export function parseWeeks(dateRange: DateRange): Array<DateRange> {
 }
 
 export function dateToString(date: Date): string {
-  return format(date, dateFmt);
+  return format(date, DATE_FMT);
 }
 
 export function diffInHours(
@@ -59,8 +59,8 @@ export function diffInHours(
   if (!laterDateString || !earlierDateString) {
     return -1;
   }
-  const earlierDate = utcToZonedTime(new Date(earlierDateString), timeZone);
-  const laterDate = utcToZonedTime(new Date(laterDateString), timeZone);
+  const earlierDate = utcToZonedTime(new Date(earlierDateString), TIME_ZONE);
+  const laterDate = utcToZonedTime(new Date(laterDateString), TIME_ZONE);
   return differenceInHours(laterDate, earlierDate);
 }
 
@@ -80,29 +80,31 @@ export function diffInBizHours(
   if (!laterDateString || !earlierDateString) {
     return -1;
   }
-  const earlierDate = utcToZonedTime(new Date(earlierDateString), timeZone);
-  const laterDate = utcToZonedTime(new Date(laterDateString), timeZone);
+  const earlierDate = utcToZonedTime(new Date(earlierDateString), TIME_ZONE);
+  const laterDate = utcToZonedTime(new Date(laterDateString), TIME_ZONE);
   const startHour = getHours(earlierDate);
   const endHour = getHours(laterDate);
   const startIsBizDay = isOnBusinessDay(earlierDate);
   // start and end within 1 business day
   if (sameDay(earlierDate, laterDate)) {
-    const endedBeforeBizDay = endHour <= startBizHour;
-    const startedAfterBizDay = startHour >= endBizHour;
+    const endedBeforeBizDay = endHour <= START_BIZ_HOUR;
+    const startedAfterBizDay = startHour >= END_BIZ_HOUR;
     if (!startIsBizDay || endedBeforeBizDay || startedAfterBizDay) {
       return 0;
     }
-    return Math.min(endBizHour, endHour) - Math.max(startBizHour, startHour);
+    return (
+      Math.min(END_BIZ_HOUR, endHour) - Math.max(START_BIZ_HOUR, startHour)
+    );
   }
 
   const hoursOfFullBizDays =
     8 * Math.max(differenceInBusinessDays(laterDate, earlierDate) - 1, 0);
-  const startBeforeEod = startHour <= endBizHour;
-  const endAfterBod = endHour >= startBizHour;
+  const startBeforeEod = startHour <= END_BIZ_HOUR;
+  const endAfterBod = endHour >= START_BIZ_HOUR;
   const hoursFromStartDay =
-    startIsBizDay && startBeforeEod ? endBizHour - startHour : 0;
+    startIsBizDay && startBeforeEod ? END_BIZ_HOUR - startHour : 0;
   const hoursFromEndDay =
-    isOnBusinessDay(laterDate) && endAfterBod ? endHour - startBizHour : 0;
+    isOnBusinessDay(laterDate) && endAfterBod ? endHour - START_BIZ_HOUR : 0;
 
   return hoursOfFullBizDays + hoursFromStartDay + hoursFromEndDay;
 }

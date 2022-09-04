@@ -1,6 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import { resultKeyNameFromField } from "@apollo/client/utilities";
-import { Box, Flex, Text, Wrap } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import {
   DateRange,
