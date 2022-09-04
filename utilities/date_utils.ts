@@ -80,11 +80,13 @@ export function diffInBizHours(
   if (!laterDateString || !earlierDateString) {
     return -1;
   }
+
   const earlierDate = utcToZonedTime(new Date(earlierDateString), TIME_ZONE);
   const laterDate = utcToZonedTime(new Date(laterDateString), TIME_ZONE);
   const startHour = getHours(earlierDate);
   const endHour = getHours(laterDate);
   const startIsBizDay = isOnBusinessDay(earlierDate);
+
   // start and end within 1 business day
   if (sameDay(earlierDate, laterDate)) {
     const endedBeforeBizDay = endHour <= START_BIZ_HOUR;
