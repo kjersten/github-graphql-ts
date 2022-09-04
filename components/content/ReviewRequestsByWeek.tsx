@@ -5,8 +5,12 @@ import {
   Stat,
   StatLabel,
   StatNumber,
-  StatHelpText,
   StatGroup,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
+  AccordionItem,
 } from "@chakra-ui/react";
 
 import {
@@ -188,27 +192,40 @@ function groupTeamRequests(teams: Team[], teamRequests: TeamReviewRequest[]) {
 }
 
 function calculateStats(teamGroups: TeamGroup[]) {
+  let totalNotReviewed = 0;
+  let totalReviewed = 0;
+  let totalHours = 0;
+  let totalBizHours = 0;
   teamGroups.forEach((team) => {
     let numNotReviewed = 0;
     let numReviewed = 0;
-    let totalHours = 0;
-    let totalBizHours = 0;
+    let hours = 0;
+    let bizHours = 0;
     team.reqs.forEach((req) => {
       if (req.hoursToReview == -1) {
         numNotReviewed += 1;
+        totalNotReviewed += 1;
       } else {
         numReviewed += 1;
+        totalReviewed += 1;
+        hours += req.hoursToReview;
         totalHours += req.hoursToReview;
+        bizHours += req.bizHoursToReview;
         totalBizHours += req.bizHoursToReview;
       }
     });
     team.notReviewed = numNotReviewed;
     if (numReviewed > 0) {
-      team.avgHoursToReview = Math.round((totalHours / numReviewed) * 10) / 10;
-      team.avgBizHoursToReview =
-        Math.round((totalBizHours / numReviewed) * 10) / 10;
+      team.avgHoursToReview = Math.round((hours / numReviewed) * 10) / 10;
+      team.avgBizHoursToReview = Math.round((bizHours / numReviewed) * 10) / 10;
     }
   });
+  return {
+    total: totalNotReviewed + totalReviewed,
+    totalNotReviewed: totalNotReviewed,
+    avgHoursToReview: Math.round((totalHours / totalReviewed) * 10) / 10,
+    avgBizHoursToReview: Math.round((totalBizHours / totalReviewed) * 10) / 10,
+  };
 }
 
 function getTeamReviewRequests(prs: Pull[]) {
@@ -266,7 +283,35 @@ function ReviewRequestsByWeek(props: Props) {
     teamData.organization.teams.nodes,
     reviewReqs
   );
-  calculateStats(teamGroups);
+  const overallStats = calculateStats(teamGroups);
+
+  function renderSummary(stats: any) {
+    return (
+      <Box paddingBottom={5}>
+        <Heading as="h3" size="lg">
+          Overall Stats
+        </Heading>
+        <StatGroup paddingBottom={3}>
+          <Stat>
+            <StatLabel>Reviews Requested</StatLabel>
+            <StatNumber>{stats.total}</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>Review Requests Not Done</StatLabel>
+            <StatNumber>{stats.totalNotReviewed}</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>Avg Total Hours</StatLabel>
+            <StatNumber>{stats.avgHoursToReview}</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>Avg Biz Hours to Review</StatLabel>
+            <StatNumber>{stats.avgBizHoursToReview}</StatNumber>
+          </Stat>
+        </StatGroup>
+      </Box>
+    );
+  }
 
   function renderTeamGroups(teamGroups: TeamGroup[], prs: Pull[]) {
     const result = teamGroups.map((group: TeamGroup) => {
@@ -293,7 +338,15 @@ function ReviewRequestsByWeek(props: Props) {
               <StatNumber>{group.avgBizHoursToReview}</StatNumber>
             </Stat>
           </StatGroup>
-          {renderAuditLog(group.reqs, prs)}
+          <Accordion allowToggle>
+            <AccordionItem>
+              <AccordionButton>
+                PRs
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel>{renderAuditLog(group.reqs, prs)}</AccordionPanel>
+            </AccordionItem>
+          </Accordion>
         </Box>
       );
     });
@@ -318,10 +371,7 @@ function ReviewRequestsByWeek(props: Props) {
 
   return (
     <>
-      <Box paddingBottom={7}>
-        {week.startString} - {week.endString}{" "}
-        <em>({numPrs} reviews requested total)</em>
-      </Box>
+      {renderSummary(overallStats)}
       {renderTeamGroups(teamGroups, prs)}
     </>
   );
