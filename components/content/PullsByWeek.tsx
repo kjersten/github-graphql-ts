@@ -16,6 +16,7 @@ const QUERY = gql`
       issueCount
       nodes {
         ... on PullRequest {
+          __typename
           id
           url
           title
@@ -27,6 +28,8 @@ const QUERY = gql`
           additions
           deletions
           repository {
+            __typename
+            id
             name
           }
           reviewThreads(first: 1) {
@@ -39,6 +42,7 @@ const QUERY = gql`
             nodes {
               ... on ReadyForReviewEvent {
                 type: __typename
+                id
                 createdAt
               }
             }

@@ -1,4 +1,4 @@
-import { signIn, signOut, useSession } from "next-auth/client";
+import { signIn, signOut, useSession } from "next-auth/react";
 import {
   Box,
   Flex,
@@ -13,7 +13,51 @@ import {
 import { DarkModeSwitch } from "./DarkModeSwitch";
 
 export default function Header() {
-  const [session] = useSession();
+  const { data: session, status } = useSession();
+
+  function renderSignInOrOut(
+    authStatus: "authenticated" | "loading" | "unauthenticated",
+    session: any
+  ) {
+    if (authStatus === "authenticated") {
+      return (
+        <>
+          <Box>
+            {/* <Avatar name={session.user.name} src={session.user.image} /> */}
+          </Box>
+          <Box>
+            <Text as="strong">
+              {session?.user?.email || session?.user?.name}
+            </Text>
+          </Box>
+          <Box>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                signOut();
+              }}
+              ml="2"
+            >
+              Sign out
+            </Button>
+          </Box>
+        </>
+      );
+    }
+    return (
+      <Box>
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            signIn();
+          }}
+        >
+          Sign in
+        </Button>
+      </Box>
+    );
+  }
+
   return (
     <Flex align="center" mt="1" mb="5">
       <Box>
@@ -25,41 +69,7 @@ export default function Header() {
           <FormLabel mb="0">Dark Mode</FormLabel>
           <DarkModeSwitch />
         </FormControl>
-        {!session && (
-          <Box>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                signIn();
-              }}
-            >
-              Sign in
-            </Button>
-          </Box>
-        )}
-        {session && (
-          <>
-            <Box>
-              {/* <Avatar name={session.user.name} src={session.user.image} /> */}
-            </Box>
-            <Box>
-              <Text as="strong">
-                {session?.user?.email || session?.user?.name}
-              </Text>
-            </Box>
-            <Box>
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  signOut();
-                }}
-                ml="2"
-              >
-                Sign out
-              </Button>
-            </Box>
-          </>
-        )}
+        {renderSignInOrOut(status, session)}
       </HStack>
     </Flex>
   );

@@ -6,7 +6,7 @@ import { DateRange } from "../../types";
 import TeamMemberTitle from "./TeamMemberTitle";
 import PullsByWeek from "./PullsByWeek";
 import CommentsByWeek from "./CommentsByWeek";
-import ReviewRequestsByWeek from "./ReviewRequestsByWeek";
+import ReviewRequests from "./ReviewRequests";
 
 type Props = {
   org: string | undefined;
@@ -23,9 +23,14 @@ type Member = {
 const QUERY = gql`
   query teamMembers($org: String!, $team: String!) {
     organization(login: $org) {
+      __typename
+      id
       team(slug: $team) {
+        __typename
+        id
         members {
           nodes {
+            id
             login
             name
           }
@@ -55,7 +60,10 @@ function MainContentPanel(props: Props) {
 
   return (
     <Box paddingTop={5}>
-      <Tabs>
+      <p>
+        <i>Sorry, broke the datepicker. Will fix soon.</i>
+      </p>
+      <Tabs isLazy>
         <TabList>
           <Tab>Pulls</Tab>
           <Tab>Reviews</Tab>
@@ -94,14 +102,12 @@ function MainContentPanel(props: Props) {
             ))}
           </TabPanel>
           <TabPanel>
-            {weeks.map((week: DateRange) => (
-              <ReviewRequestsByWeek
-                key={team + week.startString + "reviewRequests"}
-                org={org}
-                teamFullName={teamFullName}
-                week={week}
-              />
-            ))}
+            <ReviewRequests
+              key={team + dateRange.startString + "-reviewRequests"}
+              org={org}
+              teamFullName={teamFullName}
+              dateRange={dateRange}
+            />
           </TabPanel>
         </TabPanels>
       </Tabs>

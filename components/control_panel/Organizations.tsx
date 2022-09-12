@@ -16,6 +16,7 @@ const QUERY = gql`
       login
       organizations(first: 50) {
         nodes {
+          __typename
           id
           name
           login

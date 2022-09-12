@@ -4,7 +4,7 @@ import styles from "../styles/Home.module.css";
 import Header from "../components/topbar/Header";
 import { Container, Heading, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/client";
+import { useSession } from "next-auth/react";
 
 import ClientOnly from "../components/control_panel/ClientOnly";
 import ControlPanel from "../components/control_panel/ControlPanel";
@@ -14,7 +14,7 @@ import { getDefaultDateRange } from "../utilities/date_utils";
 import { DateRange } from "../types";
 
 const Home: NextPage = () => {
-  const [session] = useSession();
+  const { data: session, status } = useSession();
   const [org, setOrg] = useState<string>();
   const [team, setTeam] = useState<string>();
   const [teamFullName, setTeamFullName] = useState<string>();
@@ -41,8 +41,46 @@ const Home: NextPage = () => {
     }
   }, []);
 
-  if (session) {
+  if (status === "authenticated") {
     console.log(`session access token: ${session.accessToken}`);
+  }
+
+  function renderContentBasedOnAuth(
+    authStatus: "authenticated" | "loading" | "unauthenticated"
+  ) {
+    if (authStatus === "authenticated") {
+      return (
+        <ClientOnly>
+          <ControlPanel
+            org={org}
+            setOrg={setOrg}
+            team={team}
+            setTeam={setTeam}
+            setTeamFullName={setTeamFullName}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+          />
+          {team ? (
+            <MainContentPanel
+              org={org}
+              team={team}
+              teamFullName={teamFullName}
+              dateRange={dateRange}
+            />
+          ) : (
+            <></>
+          )}
+        </ClientOnly>
+      );
+    }
+    return (
+      <>
+        <Heading mb="4" size="md">
+          See your Pull Requests
+        </Heading>
+        <Text fontSize="md">Sign in for a list of PRs awaiting review.</Text>
+      </>
+    );
   }
 
   return (
@@ -60,39 +98,7 @@ const Home: NextPage = () => {
       </header>
       <main>
         <Container maxW="container.lg">
-          {!session && (
-            <>
-              <Heading mb="4" size="md">
-                See your Pull Requests
-              </Heading>
-              <Text fontSize="md">
-                Sign in for a list of PRs awaiting review.
-              </Text>
-            </>
-          )}
-          {session && (
-            <ClientOnly>
-              <ControlPanel
-                org={org}
-                setOrg={setOrg}
-                team={team}
-                setTeam={setTeam}
-                setTeamFullName={setTeamFullName}
-                dateRange={dateRange}
-                setDateRange={setDateRange}
-              />
-              {team ? (
-                <MainContentPanel
-                  org={org}
-                  team={team}
-                  teamFullName={teamFullName}
-                  dateRange={dateRange}
-                />
-              ) : (
-                <></>
-              )}
-            </ClientOnly>
-          )}
+          {renderContentBasedOnAuth(status)}
         </Container>
       </main>
     </div>

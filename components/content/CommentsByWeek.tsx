@@ -16,10 +16,12 @@ const QUERY = gql`
       issueCount
       nodes {
         ... on PullRequest {
+          __typename
           id
           url
           title
           author {
+            __typename
             login
           }
           createdAt
@@ -27,6 +29,8 @@ const QUERY = gql`
           additions
           deletions
           repository {
+            __typename
+            id
             name
           }
           reviewThreads(last: 20) {
@@ -37,7 +41,10 @@ const QUERY = gql`
                   totalCount
                   nodes {
                     ... on PullRequestReviewComment {
+                      __typename
+                      id
                       author {
+                        __typename
                         login
                       }
                     }
@@ -53,6 +60,7 @@ const QUERY = gql`
             nodes {
               ... on ReadyForReviewEvent {
                 type: __typename
+                id
                 createdAt
               }
             }

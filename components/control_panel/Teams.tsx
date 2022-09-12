@@ -16,11 +16,13 @@ type Team = {
 const QUERY = gql`
   query Teams($org: String!) {
     organization(login: $org) {
+      __typename
       id
       name
       login
       teams(first: 50) {
         nodes {
+          __typename
           id
           name
           slug
@@ -47,7 +49,6 @@ export default function Organizations(props: Props) {
   }
 
   const teams = data.organization.teams.nodes;
-
   return (
     <Select
       placeholder="select a team"
