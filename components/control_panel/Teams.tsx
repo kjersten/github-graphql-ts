@@ -49,9 +49,6 @@ export default function Organizations(props: Props) {
   }
 
   const teams = data.organization.teams.nodes;
-  console.log(new Date().toUTCString());
-  console.log(teams);
-
   return (
     <Select
       placeholder="select a team"

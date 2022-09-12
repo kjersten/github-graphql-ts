@@ -12,6 +12,7 @@ import {
   AccordionPanel,
   AccordionItem,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 import {
   DateRange,
@@ -32,9 +33,13 @@ type Props = {
 };
 
 const REVIEW_QUERY = gql`
-  query reviewRequests($searchQuery: String!) {
-    search(query: $searchQuery, type: ISSUE, last: 100) {
+  query allPrsForTimerange($searchQuery: String!, $after: String) {
+    search(query: $searchQuery, type: ISSUE, first: 100, after: $after) {
       issueCount
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
       nodes {
         ... on PullRequest {
           __typename
@@ -251,6 +256,7 @@ function ReviewRequestsByWeek(props: Props) {
     data: reviewData,
     loading: reviewLoading,
     error: reviewError,
+    fetchMore: fetchMoreReviewRequests,
   } = useQuery(REVIEW_QUERY, {
     variables: {
       searchQuery: `org:${org} is:pr created:${week.startString}..${week.endString}`,
@@ -264,6 +270,17 @@ function ReviewRequestsByWeek(props: Props) {
   } = useQuery(TEAM_QUERY, {
     variables: { org: org },
   });
+  useEffect(() => {
+    if (reviewData && fetchMoreReviewRequests) {
+      const nextPage = reviewData.search.pageInfo.hasNextPage;
+      const after = reviewData.search.pageInfo.endCursor;
+      console.log("endcursor", reviewData.search.pageInfo.endCursor);
+
+      if (nextPage && after !== null) {
+        fetchMoreReviewRequests({ variables: { after: after } });
+      }
+    }
+  }, [reviewData, fetchMoreReviewRequests]);
 
   if (reviewLoading || teamLoading) {
     return <p>Loading...</p>;
@@ -275,9 +292,11 @@ function ReviewRequestsByWeek(props: Props) {
     return null;
   }
 
-  const numPrs = reviewData.search.issueCount;
+  const hasNextPage = reviewData.search.pageInfo.hasNextPage;
   const prs: Pull[] = reviewData.search.nodes;
   console.log(`loaded batch of PRs at ${new Date().toUTCString()}`);
+  console.log(`has next page? ${hasNextPage}`);
+
   const reviewReqs = getTeamReviewRequests(prs);
   const teamGroups = groupTeamRequests(
     teamData.organization.teams.nodes,
