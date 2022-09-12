@@ -29,12 +29,12 @@ import ReviewRequest from "./ReviewRequest";
 type Props = {
   org: string | undefined;
   teamFullName: string | undefined;
-  week: DateRange;
+  dateRange: DateRange;
 };
 
 const REVIEW_QUERY = gql`
   query allPrsForTimerange($searchQuery: String!, $after: String) {
-    search(query: $searchQuery, type: ISSUE, first: 100, after: $after) {
+    search(query: $searchQuery, type: ISSUE, first: 50, after: $after) {
       issueCount
       pageInfo {
         endCursor
@@ -250,8 +250,8 @@ function getTeamReviewRequests(prs: Pull[]) {
   return teamRequests;
 }
 
-function ReviewRequestsByWeek(props: Props) {
-  const { org, week } = props;
+function ReviewRequests(props: Props) {
+  const { org, dateRange } = props;
   const {
     data: reviewData,
     loading: reviewLoading,
@@ -259,7 +259,7 @@ function ReviewRequestsByWeek(props: Props) {
     fetchMore: fetchMoreReviewRequests,
   } = useQuery(REVIEW_QUERY, {
     variables: {
-      searchQuery: `org:${org} is:pr created:${week.startString}..${week.endString}`,
+      searchQuery: `org:${org} is:pr created:${dateRange.startString}..${dateRange.endString}`,
       pollInterval: 0,
     },
   });
@@ -396,4 +396,4 @@ function ReviewRequestsByWeek(props: Props) {
   );
 }
 
-export default ReviewRequestsByWeek;
+export default ReviewRequests;

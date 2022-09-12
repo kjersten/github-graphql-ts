@@ -6,7 +6,7 @@ import { DateRange } from "../../types";
 import TeamMemberTitle from "./TeamMemberTitle";
 import PullsByWeek from "./PullsByWeek";
 import CommentsByWeek from "./CommentsByWeek";
-import ReviewRequestsByWeek from "./ReviewRequestsByWeek";
+import ReviewRequests from "./ReviewRequests";
 
 type Props = {
   org: string | undefined;
@@ -57,10 +57,12 @@ function MainContentPanel(props: Props) {
 
   const members = data.organization.team.members.nodes;
   const weeks = parseWeeks(dateRange);
-  const week1 = weeks[0];
 
   return (
     <Box paddingTop={5}>
+      <p>
+        <i>Sorry, broke the datepicker. Will fix soon.</i>
+      </p>
       <Tabs isLazy>
         <TabList>
           <Tab>Pulls</Tab>
@@ -100,14 +102,12 @@ function MainContentPanel(props: Props) {
             ))}
           </TabPanel>
           <TabPanel>
-            {/* {weeks.map((week: DateRange) => ( */}
-            <ReviewRequestsByWeek
-              key={team + week1.startString + "-reviewRequests"}
+            <ReviewRequests
+              key={team + dateRange.startString + "-reviewRequests"}
               org={org}
               teamFullName={teamFullName}
-              week={week1}
+              dateRange={dateRange}
             />
-            {/* ))} */}
           </TabPanel>
         </TabPanels>
       </Tabs>
