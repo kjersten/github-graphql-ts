@@ -2,11 +2,11 @@ import { Input } from "@chakra-ui/react";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import { DateRange } from "../../types";
-import { getDefaultDateRange } from "../../utilities/date_utils";
+import { getDefaultDateRange, dateToString } from "../../utilities/date_utils";
 import "react-datepicker/dist/react-datepicker.css";
-import { isWeekend } from "date-fns";
+import { isSunday } from "date-fns";
 
-type Dates = Date | [Date | null, Date | null] | /* for selectsRange */ null;
+type Dates = [Date | null, Date | null];
 type Props = {
   dateRange: DateRange;
   setDateRange: Function;
@@ -24,7 +24,12 @@ const DateSelector = (props: Props) => {
       setStartDate(dates[0]);
       setEndDate(dates[1]);
       if (dates[0] !== null && dates[1] !== null) {
-        setDateRange({ start: dates[0], end: dates[1] });
+        setDateRange({
+          start: dates[0],
+          startString: dateToString(dates[0]),
+          end: dates[1],
+          endString: dateToString(dates[1]),
+        });
       }
     }
   };
@@ -36,7 +41,7 @@ const DateSelector = (props: Props) => {
       startDate={startDate}
       endDate={endDate}
       customInput={customInput}
-      filterDate={(date: Date) => isWeekend(date)}
+      filterDate={(date: Date) => isSunday(date)}
       selectsRange
     />
   );

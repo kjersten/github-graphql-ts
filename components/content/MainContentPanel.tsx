@@ -60,9 +60,6 @@ function MainContentPanel(props: Props) {
 
   return (
     <Box paddingTop={5}>
-      <p>
-        <i>Sorry, broke the datepicker. Will fix soon.</i>
-      </p>
       <Tabs isLazy>
         <TabList>
           <Tab>Pulls</Tab>

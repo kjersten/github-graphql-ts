@@ -11,6 +11,9 @@ import {
   AccordionIcon,
   AccordionPanel,
   AccordionItem,
+  Alert,
+  Spinner,
+  Stack,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 
@@ -390,6 +393,14 @@ function ReviewRequests(props: Props) {
 
   return (
     <>
+      {hasNextPage && (
+        <Alert status="info" paddingBottom={5}>
+          <Stack direction="row" spacing={4}>
+            <Spinner speed="1.5s" />
+            <Box>Please hold. Loading more records.</Box>
+          </Stack>
+        </Alert>
+      )}
       {renderSummary(overallStats)}
       {renderTeamGroups(teamGroups, prs)}
     </>
