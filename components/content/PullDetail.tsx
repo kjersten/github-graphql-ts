@@ -60,13 +60,13 @@ function PullDetail(props: Props) {
       <Wrap>
         {pull.additions + pull.deletions > 250 && (
           <>
-            <Tooltip label="# of lines added">
+            <Tooltip label="# of lines added" layerStyle="tooltip">
               <Tag colorScheme="green">
                 <TagLeftIcon as={FaPlusCircle} />
                 <TagLabel>{pull.additions}</TagLabel>
               </Tag>
             </Tooltip>
-            <Tooltip label="# of lines removed">
+            <Tooltip label="# of lines removed" layerStyle="tooltip">
               <Tag colorScheme="red">
                 <TagLeftIcon as={FaMinusCircle} />
                 <TagLabel>{pull.deletions}</TagLabel>
@@ -75,7 +75,7 @@ function PullDetail(props: Props) {
           </>
         )}
         {bizDaysToMerge > 2 && (
-          <Tooltip label="biz days to merge">
+          <Tooltip label="biz days to merge" layerStyle="tooltip">
             <Tag colorScheme="purple">
               <TagLeftIcon as={FaCalendarCheck} />
               <TagLabel>{bizDaysToMerge}</TagLabel>
@@ -83,7 +83,7 @@ function PullDetail(props: Props) {
           </Tooltip>
         )}
         {pull.reviewThreads && pull.reviewThreads.totalCount > 0 && (
-          <Tooltip label="# of review threads">
+          <Tooltip label="# of review threads" layerStyle="tooltip">
             <Tag>
               <TagLeftIcon as={FaRegComments} />
               <TagLabel>{pull.reviewThreads.totalCount}</TagLabel>

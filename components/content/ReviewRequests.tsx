@@ -286,7 +286,27 @@ function ReviewRequests(props: Props) {
   }, [reviewData, fetchMoreReviewRequests]);
 
   if (reviewLoading || teamLoading) {
-    return <p>Loading...</p>;
+    return <p>Loading initial set of data...</p>;
+  }
+
+  const hasNextPage = reviewData.search.pageInfo.hasNextPage;
+  const prs: Pull[] = reviewData.search.nodes;
+  const reviewReqs = getTeamReviewRequests(prs);
+  const totalPrs = reviewData.search.issueCount;
+  console.log(`loaded batch of PRs at ${new Date().toUTCString()}`);
+  console.log(`has next page? ${hasNextPage}`);
+
+  if (hasNextPage) {
+    return (
+      <Alert status="info">
+        <Stack direction="row" spacing={4}>
+          <Spinner speed="1.5s" />
+          <Box>
+            Loading PRs for this time period... {prs?.length} of {totalPrs}
+          </Box>
+        </Stack>
+      </Alert>
+    );
   }
 
   if (reviewError || teamError) {
@@ -295,12 +315,6 @@ function ReviewRequests(props: Props) {
     return null;
   }
 
-  const hasNextPage = reviewData.search.pageInfo.hasNextPage;
-  const prs: Pull[] = reviewData.search.nodes;
-  console.log(`loaded batch of PRs at ${new Date().toUTCString()}`);
-  console.log(`has next page? ${hasNextPage}`);
-
-  const reviewReqs = getTeamReviewRequests(prs);
   const teamGroups = groupTeamRequests(
     teamData.organization.teams.nodes,
     reviewReqs
@@ -393,14 +407,6 @@ function ReviewRequests(props: Props) {
 
   return (
     <>
-      {hasNextPage && (
-        <Alert status="info" paddingBottom={5}>
-          <Stack direction="row" spacing={4}>
-            <Spinner speed="1.5s" />
-            <Box>Please hold. Loading more records.</Box>
-          </Stack>
-        </Alert>
-      )}
       {renderSummary(overallStats)}
       {renderTeamGroups(teamGroups, prs)}
     </>

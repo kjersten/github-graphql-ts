@@ -11,7 +11,12 @@ import {
   Wrap,
   TagRightIcon,
 } from "@chakra-ui/react";
-import { FaBan, FaMinusCircle, FaPlusCircle, FaRegClock } from "react-icons/fa";
+import {
+  FaBan,
+  FaArrowsAltV,
+  FaRegClock,
+  FaBusinessTime,
+} from "react-icons/fa";
 
 import { Pull, TeamReviewRequest } from "../../types";
 
@@ -42,39 +47,31 @@ function ReviewRequest(props: Props) {
       <Spacer />
       <Wrap>
         {pull.additions + pull.deletions > 250 && (
-          <>
-            <Tooltip label="# of lines added">
-              <Tag colorScheme="green">
-                <TagLeftIcon as={FaPlusCircle} />
-                <TagLabel>{pull.additions}</TagLabel>
-              </Tag>
-            </Tooltip>
-            <Tooltip label="# of lines removed">
-              <Tag colorScheme="red">
-                <TagLeftIcon as={FaMinusCircle} />
-                <TagLabel>{pull.deletions}</TagLabel>
-              </Tag>
-            </Tooltip>
-          </>
+          <Tooltip label="# of lines changed" layerStyle="tooltip">
+            <Tag colorScheme="orange">
+              <TagLeftIcon as={FaArrowsAltV} />
+              <TagLabel>{pull.additions + pull.deletions}</TagLabel>
+            </Tag>
+          </Tooltip>
         )}
-        <Tooltip label="hours to review">
-          <Tag colorScheme="blue">
+        <Tooltip label="hours to review" layerStyle="tooltip">
+          <Tag colorScheme="gray">
             <TagLeftIcon as={FaRegClock} />
-            {teamReviewRequest.hoursToReview === -1 ? (
-              <TagRightIcon as={FaBan} />
-            ) : (
-              <TagLabel>{teamReviewRequest.hoursToReview}</TagLabel>
-            )}
+            <TagLabel>
+              {teamReviewRequest.hoursToReview === -1
+                ? "-"
+                : teamReviewRequest.hoursToReview}
+            </TagLabel>
           </Tag>
         </Tooltip>
-        <Tooltip label="biz hours to review">
-          <Tag colorScheme="pink">
-            {/* <TagLeftIcon as={FaFire} /> */}
-            {teamReviewRequest.bizHoursToReview === -1 ? (
-              <TagRightIcon as={FaBan} />
-            ) : (
-              <TagLabel>{teamReviewRequest.bizHoursToReview}</TagLabel>
-            )}
+        <Tooltip label="biz hours to review" layerStyle="tooltip">
+          <Tag colorScheme="teal">
+            <TagLeftIcon as={FaBusinessTime} />
+            <TagLabel>
+              {teamReviewRequest.bizHoursToReview === -1
+                ? "-"
+                : teamReviewRequest.bizHoursToReview}
+            </TagLabel>
           </Tag>
         </Tooltip>
       </Wrap>

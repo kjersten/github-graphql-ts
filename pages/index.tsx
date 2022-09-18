@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import Header from "../components/topbar/Header";
 import { Container, Heading, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
@@ -84,7 +83,7 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>GH Team View</title>
         <meta name="description" content="View Your Team's Activity" />

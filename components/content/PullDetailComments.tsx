@@ -54,7 +54,7 @@ function PullDetailComments(props: Props) {
       <Spacer />
       <Wrap>
         {userCommentCount > 0 && (
-          <Tooltip label="# comments by this user">
+          <Tooltip label="# comments by this user" layerStyle="tooltip">
             <Tag>
               <TagLeftIcon as={FaUserPlus} />
               <TagLabel>{userCommentCount}</TagLabel>
@@ -62,7 +62,7 @@ function PullDetailComments(props: Props) {
           </Tooltip>
         )}
         {pull.reviewThreads && pull.reviewThreads.totalCount > 0 && (
-          <Tooltip label="# of review threads">
+          <Tooltip label="# of review threads" layerStyle="tooltip">
             <Tag>
               <TagLeftIcon as={FaRegComments} />
               <TagLabel>{pull.reviewThreads.totalCount}</TagLabel>

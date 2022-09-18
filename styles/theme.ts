@@ -1,6 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
 
-// const fonts = { mono: `'Menlo', monospace` };
 const config = {
   initialColorMode: "system",
   useSystemColorMode: true,
@@ -8,10 +7,12 @@ const config = {
 
 const theme = extendTheme({
   config,
-  // colors: {
-  //   black: "#16161D",
-  // },
-  // fonts,
+  layerStyles: {
+    tooltip: {
+      background: "gray.300",
+      color: "black",
+    },
+  },
 });
 
 export default theme;
