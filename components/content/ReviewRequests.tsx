@@ -1,20 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import {
-  Box,
-  Heading,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatGroup,
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
-  AccordionItem,
-  Alert,
-  Spinner,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, Alert, Spinner, Stack } from "@chakra-ui/react";
 import { useEffect } from "react";
 
 import {
@@ -27,7 +12,8 @@ import {
   TeamGroup,
 } from "../../types";
 import { diffInBizHours, diffInHours } from "../../utilities/date_utils";
-import ReviewRequest from "./ReviewRequest";
+import ReviewRequestSummary from "./ReviewRequestSummary";
+import ReviewRequestTeamGroup from "./ReviewRequestTeamGroup";
 
 type Props = {
   org: string | undefined;
@@ -321,83 +307,13 @@ function ReviewRequests(props: Props) {
   );
   const overallStats = calculateStats(teamGroups);
 
-  function renderSummary(stats: any) {
-    return (
-      <Box paddingBottom={5}>
-        <Heading as="h3" size="lg">
-          Overall Stats
-        </Heading>
-        <StatGroup paddingBottom={3}>
-          <Stat>
-            <StatLabel>Reviews Requested</StatLabel>
-            <StatNumber>{stats.total}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel>Review Requests Not Done</StatLabel>
-            <StatNumber>{stats.totalNotReviewed}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel>Avg Total Hours</StatLabel>
-            <StatNumber>{stats.avgHoursToReview}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel>Avg Biz Hours to Review</StatLabel>
-            <StatNumber>{stats.avgBizHoursToReview}</StatNumber>
-          </Stat>
-        </StatGroup>
-      </Box>
-    );
-  }
-
   function renderTeamGroups(teamGroups: TeamGroup[], prs: Pull[]) {
     const result = teamGroups.map((group: TeamGroup) => {
       return (
-        <Box key={`{${group.slug}-group`} paddingBottom={5}>
-          <Heading as="h3" size="lg">
-            {group.slug}
-          </Heading>
-          <StatGroup paddingBottom={3}>
-            <Stat>
-              <StatLabel>Requested</StatLabel>
-              <StatNumber>{group.reqs.length}</StatNumber>
-            </Stat>
-            <Stat>
-              <StatLabel>Not Reviewed</StatLabel>
-              <StatNumber>{group.notReviewed}</StatNumber>
-            </Stat>
-            <Stat>
-              <StatLabel>Avg Total Hours</StatLabel>
-              <StatNumber>{group.avgHoursToReview}</StatNumber>
-            </Stat>
-            <Stat>
-              <StatLabel>Avg Biz Hours to Review</StatLabel>
-              <StatNumber>{group.avgBizHoursToReview}</StatNumber>
-            </Stat>
-          </StatGroup>
-          <Accordion allowToggle>
-            <AccordionItem>
-              <AccordionButton>
-                PRs
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel>{renderAuditLog(group.reqs, prs)}</AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        </Box>
-      );
-    });
-
-    return result;
-  }
-
-  function renderAuditLog(reviewRequests: TeamReviewRequest[], prs: Pull[]) {
-    const result = reviewRequests.map((request: TeamReviewRequest) => {
-      const pull = prs.find((pr: Pull) => pr.id == request.pullId);
-      return (
-        <ReviewRequest
-          key={`${request.teamId}-${request.pullId}`}
-          teamReviewRequest={request}
-          pull={pull}
+        <ReviewRequestTeamGroup
+          prs={prs}
+          group={group}
+          key={group.slug + "-group"}
         />
       );
     });
@@ -407,7 +323,7 @@ function ReviewRequests(props: Props) {
 
   return (
     <>
-      {renderSummary(overallStats)}
+      <ReviewRequestSummary stats={overallStats} />
       {renderTeamGroups(teamGroups, prs)}
     </>
   );
