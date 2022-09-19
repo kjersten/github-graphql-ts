@@ -88,6 +88,11 @@ const Home: NextPage = () => {
         <title>GH Team View</title>
         <meta name="description" content="View Your Team's Activity" />
         <link rel="icon" href="/favicon.ico" />
+        <meta name="robots" content="noindex" />
+        <meta
+          name="google-site-verification"
+          content="uNBFx20dKT8iXB1sIi4jLufzmHFEe-2_rmep8WS7aig"
+        />
       </Head>
 
       <header>
