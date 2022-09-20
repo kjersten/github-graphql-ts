@@ -190,6 +190,8 @@ function calculateStats(teamGroups: TeamGroup[]) {
   let totalReviewed = 0;
   let totalHours = 0;
   let totalBizHours = 0;
+  const hoursArray: number[] = [];
+  const bizHoursArray: number[] = [];
   teamGroups.forEach((team) => {
     let numNotReviewed = 0;
     let numReviewed = 0;
@@ -206,6 +208,8 @@ function calculateStats(teamGroups: TeamGroup[]) {
         totalHours += req.hoursToReview;
         bizHours += req.bizHoursToReview;
         totalBizHours += req.bizHoursToReview;
+        hoursArray.push(req.hoursToReview);
+        bizHoursArray.push(req.bizHoursToReview);
       }
     });
     team.notReviewed = numNotReviewed;
@@ -214,11 +218,30 @@ function calculateStats(teamGroups: TeamGroup[]) {
       team.avgBizHoursToReview = Math.round((bizHours / numReviewed) * 10) / 10;
     }
   });
+  hoursArray.sort((a, b) => a - b);
+  bizHoursArray.sort((a, b) => a - b);
+  console.log("hours are ", hoursArray);
+  console.log("biz hours are ", bizHoursArray);
+  const hoursToReview50 = hoursArray[Math.floor(hoursArray.length * 0.5) - 1];
+  const bizHoursToReview50 =
+    bizHoursArray[Math.floor(hoursArray.length * 0.5) - 1];
+  const hoursToReview75 = hoursArray[Math.floor(hoursArray.length * 0.75) - 1];
+  const bizHoursToReview75 =
+    bizHoursArray[Math.floor(hoursArray.length * 0.75) - 1];
+  const hoursToReview90 = hoursArray[Math.floor(hoursArray.length * 0.9) - 1];
+  const bizHoursToReview90 =
+    bizHoursArray[Math.floor(hoursArray.length * 0.9) - 1];
   return {
     total: totalNotReviewed + totalReviewed,
     totalNotReviewed: totalNotReviewed,
     avgHoursToReview: Math.round((totalHours / totalReviewed) * 10) / 10,
     avgBizHoursToReview: Math.round((totalBizHours / totalReviewed) * 10) / 10,
+    hoursToReview50,
+    bizHoursToReview50,
+    hoursToReview75,
+    bizHoursToReview75,
+    hoursToReview90,
+    bizHoursToReview90,
   };
 }
 
