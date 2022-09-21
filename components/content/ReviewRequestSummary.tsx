@@ -61,7 +61,7 @@ export default function ReviewRequestSummary(props: Props) {
         </StatGroup>
       </Box>
       <Heading as="h3" size="lg">
-        Percent Stats
+        Percentiles
       </Heading>
       <Box paddingBottom={25}>
         <StatGroup>

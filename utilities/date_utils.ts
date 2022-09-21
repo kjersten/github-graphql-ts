@@ -8,6 +8,7 @@ import {
   eachWeekOfInterval,
   differenceInHours,
   differenceInBusinessDays,
+  getMinutes,
 } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 
@@ -15,8 +16,8 @@ import { DateRange } from "../types";
 
 const DATE_FMT = "yyyy-MM-dd";
 const TIME_ZONE = "America/Los_Angeles"; // "Europe/Berlin" to verify
-const START_BIZ_HOUR = 9;
-const END_BIZ_HOUR = 17;
+const START_BIZ_HOUR = 9.0;
+const END_BIZ_HOUR = 17.0;
 
 export function getDefaultDateRange(): DateRange {
   const today = new Date();
@@ -61,7 +62,21 @@ export function diffInHours(
   }
   const earlierDate = utcToZonedTime(new Date(earlierDateString), TIME_ZONE);
   const laterDate = utcToZonedTime(new Date(laterDateString), TIME_ZONE);
-  return differenceInHours(laterDate, earlierDate);
+  const diffInMinutes = elapsedMinutes(
+    getMinutes(earlierDate),
+    getMinutes(laterDate)
+  );
+  const minuteDecimal = twoDecimals(diffInMinutes / 60);
+  const diffInHours = differenceInHours(laterDate, earlierDate);
+  return diffInHours + minuteDecimal;
+}
+
+function elapsedMinutes(earlierMinutes: number, laterMinutes: number): number {
+  if (earlierMinutes > laterMinutes) {
+    return 60 - earlierMinutes + laterMinutes;
+  } else {
+    return laterMinutes - earlierMinutes;
+  }
 }
 
 function sameDay(date1: Date, date2: Date): boolean {
@@ -71,6 +86,16 @@ function sameDay(date1: Date, date2: Date): boolean {
 function isOnBusinessDay(date: Date): boolean {
   const dayOfWeek = getDay(date);
   return dayOfWeek > 0 && dayOfWeek < 6;
+}
+
+function getHourFraction(date: Date): number {
+  const hours = getHours(date);
+  const minutes = getMinutes(date);
+  return hours + minutes / 60;
+}
+
+export function twoDecimals(num: number): number {
+  return Math.round(num * 100) / 100;
 }
 
 export function diffInBizHours(
@@ -83,18 +108,19 @@ export function diffInBizHours(
 
   const earlierDate = utcToZonedTime(new Date(earlierDateString), TIME_ZONE);
   const laterDate = utcToZonedTime(new Date(laterDateString), TIME_ZONE);
-  const startHour = getHours(earlierDate);
-  const endHour = getHours(laterDate);
+  const startHour = getHourFraction(earlierDate);
+  const endHour = getHourFraction(laterDate);
   const startIsBizDay = isOnBusinessDay(earlierDate);
 
   // start and end within 1 business day
   if (sameDay(earlierDate, laterDate)) {
     const endedBeforeBizDay = endHour <= START_BIZ_HOUR;
     const startedAfterBizDay = startHour >= END_BIZ_HOUR;
+    // starts and ends same day outside of business hours
     if (!startIsBizDay || endedBeforeBizDay || startedAfterBizDay) {
       return 0;
     }
-    return (
+    return twoDecimals(
       Math.min(END_BIZ_HOUR, endHour) - Math.max(START_BIZ_HOUR, startHour)
     );
   }
@@ -108,5 +134,5 @@ export function diffInBizHours(
   const hoursFromEndDay =
     isOnBusinessDay(laterDate) && endAfterBod ? endHour - START_BIZ_HOUR : 0;
 
-  return hoursOfFullBizDays + hoursFromStartDay + hoursFromEndDay;
+  return twoDecimals(hoursOfFullBizDays + hoursFromStartDay + hoursFromEndDay);
 }

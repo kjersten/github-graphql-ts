@@ -11,7 +11,11 @@ import {
   PullRequestReview,
   TeamGroup,
 } from "../../types";
-import { diffInBizHours, diffInHours } from "../../utilities/date_utils";
+import {
+  diffInBizHours,
+  diffInHours,
+  twoDecimals,
+} from "../../utilities/date_utils";
 import ReviewRequestSummary from "./ReviewRequestSummary";
 import ReviewRequestTeamGroup from "./ReviewRequestTeamGroup";
 
@@ -214,8 +218,8 @@ function calculateStats(teamGroups: TeamGroup[]) {
     });
     team.notReviewed = numNotReviewed;
     if (numReviewed > 0) {
-      team.avgHoursToReview = Math.round((hours / numReviewed) * 10) / 10;
-      team.avgBizHoursToReview = Math.round((bizHours / numReviewed) * 10) / 10;
+      team.avgHoursToReview = twoDecimals(hours / numReviewed);
+      team.avgBizHoursToReview = twoDecimals(bizHours / numReviewed);
     }
   });
   hoursArray.sort((a, b) => a - b);
@@ -231,11 +235,24 @@ function calculateStats(teamGroups: TeamGroup[]) {
   const hoursToReview90 = hoursArray[Math.floor(hoursArray.length * 0.9) - 1];
   const bizHoursToReview90 =
     bizHoursArray[Math.floor(hoursArray.length * 0.9) - 1];
+  const totalHoursComp = hoursArray.reduce((prev, curr) => prev + curr, 0);
+  const totalBizHoursComp = bizHoursArray.reduce(
+    (prev, curr) => prev + curr,
+    0
+  );
+  console.log(`total hours computed: ${totalHoursComp} vs ${totalHours}`);
+  console.log(`biz hours computed: ${totalBizHoursComp} vs ${totalBizHours}`);
+  console.log(
+    `average hours ${twoDecimals(totalHoursComp / hoursArray.length)}`
+  );
+  console.log(
+    `average biz hours ${twoDecimals(totalBizHoursComp / bizHoursArray.length)}`
+  );
   return {
     total: totalNotReviewed + totalReviewed,
     totalNotReviewed: totalNotReviewed,
-    avgHoursToReview: Math.round((totalHours / totalReviewed) * 10) / 10,
-    avgBizHoursToReview: Math.round((totalBizHours / totalReviewed) * 10) / 10,
+    avgHoursToReview: twoDecimals(totalHours / totalReviewed),
+    avgBizHoursToReview: twoDecimals(totalBizHours / totalReviewed),
     hoursToReview50,
     bizHoursToReview50,
     hoursToReview75,
