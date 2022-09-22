@@ -1,5 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import { Box, Alert, Spinner, Stack } from "@chakra-ui/react";
+import { Alert, Box, Button, Spinner, Stack } from "@chakra-ui/react";
 import { useEffect } from "react";
 
 import {
@@ -121,6 +121,7 @@ const TEAM_QUERY = gql`
 
 function registerReviewRequests(
   prId: string,
+  prUrl: string,
   reviewRequests: ReviewRequestedEvent[],
   teamRequests: TeamReviewRequest[]
 ) {
@@ -133,6 +134,8 @@ function registerReviewRequests(
       if (!existingRequest) {
         teamRequests.push({
           pullId: prId,
+          url: prUrl,
+          teamSlug: request.requestedReviewer.slug,
           teamId: request.requestedReviewer.id,
           requestedAt: request.createdAt,
           reviewedAt: null,
@@ -191,27 +194,23 @@ function groupTeamRequests(teams: Team[], teamRequests: TeamReviewRequest[]) {
 
 function calculateStats(teamGroups: TeamGroup[]) {
   let totalNotReviewed = 0;
-  let totalReviewed = 0;
-  let totalHours = 0;
-  let totalBizHours = 0;
   const hoursArray: number[] = [];
   const bizHoursArray: number[] = [];
+  const reviewAudit: TeamReviewRequest[] = [];
   teamGroups.forEach((team) => {
     let numNotReviewed = 0;
     let numReviewed = 0;
     let hours = 0;
     let bizHours = 0;
     team.reqs.forEach((req) => {
-      if (req.hoursToReview == -1) {
+      if (req.hoursToReview === -1) {
         numNotReviewed += 1;
         totalNotReviewed += 1;
       } else {
+        reviewAudit.push(req);
         numReviewed += 1;
-        totalReviewed += 1;
         hours += req.hoursToReview;
-        totalHours += req.hoursToReview;
         bizHours += req.bizHoursToReview;
-        totalBizHours += req.bizHoursToReview;
         hoursArray.push(req.hoursToReview);
         bizHoursArray.push(req.bizHoursToReview);
       }
@@ -240,25 +239,18 @@ function calculateStats(teamGroups: TeamGroup[]) {
     (prev, curr) => prev + curr,
     0
   );
-  console.log(`total hours computed: ${totalHoursComp} vs ${totalHours}`);
-  console.log(`biz hours computed: ${totalBizHoursComp} vs ${totalBizHours}`);
-  console.log(
-    `average hours ${twoDecimals(totalHoursComp / hoursArray.length)}`
-  );
-  console.log(
-    `average biz hours ${twoDecimals(totalBizHoursComp / bizHoursArray.length)}`
-  );
   return {
-    total: totalNotReviewed + totalReviewed,
+    total: totalNotReviewed + hoursArray.length,
     totalNotReviewed: totalNotReviewed,
-    avgHoursToReview: twoDecimals(totalHours / totalReviewed),
-    avgBizHoursToReview: twoDecimals(totalBizHours / totalReviewed),
+    avgHoursToReview: twoDecimals(totalHoursComp / hoursArray.length),
+    avgBizHoursToReview: twoDecimals(totalBizHoursComp / hoursArray.length),
     hoursToReview50,
     bizHoursToReview50,
     hoursToReview75,
     bizHoursToReview75,
     hoursToReview90,
     bizHoursToReview90,
+    reviewAudit,
   };
 }
 
@@ -268,6 +260,7 @@ function getTeamReviewRequests(prs: Pull[]) {
     if (pr.reviewRequestedEvents !== null) {
       registerReviewRequests(
         pr.id,
+        pr.url,
         pr.reviewRequestedEvents.nodes,
         teamRequests
       );
@@ -277,6 +270,32 @@ function getTeamReviewRequests(prs: Pull[]) {
     }
   });
   return teamRequests;
+}
+
+function download(filename: string, reviewAudit: TeamReviewRequest[]) {
+  let text: string =
+    "PullId,PullUrl,Team,RequestedAt,ReviewedAt,HoursToReview,BizHoursToReview\n";
+  text += reviewAudit
+    .map(function (rr) {
+      let str = `${rr.pullId},${rr.url},${rr.teamSlug},${rr.requestedAt},${rr.reviewedAt},`;
+      str += `${rr.hoursToReview},${rr.bizHoursToReview}\n`;
+      return str;
+    })
+    .join("");
+
+  const element = document.createElement("a");
+  element.setAttribute(
+    "href",
+    "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+  );
+  element.setAttribute("download", filename);
+
+  element.style.display = "none";
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
 }
 
 function ReviewRequests(props: Props) {
@@ -346,6 +365,8 @@ function ReviewRequests(props: Props) {
     reviewReqs
   );
   const overallStats = calculateStats(teamGroups);
+  const reviewAudit = overallStats.reviewAudit;
+  const auditFileName = `reviewRequests  ${dateRange.startString} - ${dateRange.endString}.csv`;
 
   function renderTeamGroups(teamGroups: TeamGroup[], prs: Pull[]) {
     const result = teamGroups.map((group: TeamGroup) => {
@@ -363,6 +384,13 @@ function ReviewRequests(props: Props) {
 
   return (
     <>
+      <Button
+        mb={10}
+        colorScheme="blue"
+        onClick={() => download(auditFileName, reviewAudit)}
+      >
+        Download Audit Log
+      </Button>
       <ReviewRequestSummary stats={overallStats} />
       {renderTeamGroups(teamGroups, prs)}
     </>

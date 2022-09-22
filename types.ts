@@ -83,6 +83,8 @@ export interface ReviewRequestedEvent {
 export interface TeamReviewRequest {
   pullId: string;
   teamId: string;
+  teamSlug: string | null;
+  url: string | null;
   requestedAt: string;
   reviewedAt: string | null;
   hoursToReview: number;
