@@ -6,7 +6,7 @@ import { DateRange } from "../../types";
 import TeamMemberTitle from "./TeamMemberTitle";
 import PullsByWeek from "./PullsByWeek";
 import CommentsByWeek from "./CommentsByWeek";
-import ReviewRequests from "./ReviewRequests";
+import ReviewRequests from "./Reviews/ReviewRequests";
 
 type Props = {
   org: string | undefined;

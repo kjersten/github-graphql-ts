@@ -18,7 +18,7 @@ import {
   FaBusinessTime,
 } from "react-icons/fa";
 
-import { Pull, TeamReviewRequest } from "../../types";
+import { Pull, TeamReviewRequest } from "../../../types";
 
 type Props = {
   teamReviewRequest: TeamReviewRequest;

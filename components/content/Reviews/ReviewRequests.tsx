@@ -10,14 +10,15 @@ import {
   ReviewRequestedEvent,
   PullRequestReview,
   TeamGroup,
-} from "../../types";
+} from "../../../types";
 import {
   diffInBizHours,
   diffInHours,
   twoDecimals,
-} from "../../utilities/date_utils";
+} from "../../../utilities/date_utils";
 import ReviewRequestSummary from "./ReviewRequestSummary";
 import ReviewRequestTeamGroup from "./ReviewRequestTeamGroup";
+import DownloadAuditLog from "./DownloadAuditLog";
 
 type Props = {
   org: string | undefined;
@@ -223,8 +224,6 @@ function calculateStats(teamGroups: TeamGroup[]) {
   });
   hoursArray.sort((a, b) => a - b);
   bizHoursArray.sort((a, b) => a - b);
-  console.log("hours are ", hoursArray);
-  console.log("biz hours are ", bizHoursArray);
   const hoursToReview50 = hoursArray[Math.floor(hoursArray.length * 0.5) - 1];
   const bizHoursToReview50 =
     bizHoursArray[Math.floor(hoursArray.length * 0.5) - 1];
@@ -270,32 +269,6 @@ function getTeamReviewRequests(prs: Pull[]) {
     }
   });
   return teamRequests;
-}
-
-function download(filename: string, reviewAudit: TeamReviewRequest[]) {
-  let text: string =
-    "PullId,PullUrl,Team,RequestedAt,ReviewedAt,HoursToReview,BizHoursToReview\n";
-  text += reviewAudit
-    .map(function (rr) {
-      let str = `${rr.pullId},${rr.url},${rr.teamSlug},${rr.requestedAt},${rr.reviewedAt},`;
-      str += `${rr.hoursToReview},${rr.bizHoursToReview}\n`;
-      return str;
-    })
-    .join("");
-
-  const element = document.createElement("a");
-  element.setAttribute(
-    "href",
-    "data:text/plain;charset=utf-8," + encodeURIComponent(text)
-  );
-  element.setAttribute("download", filename);
-
-  element.style.display = "none";
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
 }
 
 function ReviewRequests(props: Props) {
@@ -384,13 +357,10 @@ function ReviewRequests(props: Props) {
 
   return (
     <>
-      <Button
-        mb={10}
-        colorScheme="blue"
-        onClick={() => download(auditFileName, reviewAudit)}
-      >
-        Download Audit Log
-      </Button>
+      <DownloadAuditLog
+        auditFileName={auditFileName}
+        reviewAudit={reviewAudit}
+      />
       <ReviewRequestSummary stats={overallStats} />
       {renderTeamGroups(teamGroups, prs)}
     </>

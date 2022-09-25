@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 import ReviewRequest from "./ReviewRequest";
-import { Pull, TeamReviewRequest, TeamGroup } from "../../types";
+import { Pull, TeamReviewRequest, TeamGroup } from "../../../types";
 
 type Props = {
   group: TeamGroup;
