@@ -1,5 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import { Alert, Box, Button, Spinner, Stack } from "@chakra-ui/react";
+import { Alert, Box, Spinner, Stack } from "@chakra-ui/react";
 import { useEffect } from "react";
 
 import {
@@ -28,7 +28,7 @@ type Props = {
 
 const REVIEW_QUERY = gql`
   query allPrsForTimerange($searchQuery: String!, $after: String) {
-    search(query: $searchQuery, type: ISSUE, first: 50, after: $after) {
+    search(query: $searchQuery, type: ISSUE, first: 45, after: $after) {
       issueCount
       pageInfo {
         endCursor
@@ -294,11 +294,11 @@ function ReviewRequests(props: Props) {
   useEffect(() => {
     if (reviewData && fetchMoreReviewRequests) {
       const nextPage = reviewData.search.pageInfo.hasNextPage;
-      const after = reviewData.search.pageInfo.endCursor;
-      console.log("endcursor", reviewData.search.pageInfo.endCursor);
+      const endCursor = reviewData.search.pageInfo.endCursor;
+      console.log("endcursor", endCursor);
 
-      if (nextPage && after !== null) {
-        fetchMoreReviewRequests({ variables: { after: after } });
+      if (nextPage && endCursor) {
+        fetchMoreReviewRequests({ variables: { after: endCursor } });
       }
     }
   }, [reviewData, fetchMoreReviewRequests]);
@@ -311,7 +311,9 @@ function ReviewRequests(props: Props) {
   const prs: Pull[] = reviewData.search.nodes;
   const reviewReqs = getTeamReviewRequests(prs);
   const totalPrs = reviewData.search.issueCount;
-  console.log(`loaded batch of PRs at ${new Date().toUTCString()}`);
+  console.log(
+    `loaded ${prs.length} batch of PRs at ${new Date().toUTCString()}`
+  );
   console.log(`has next page? ${hasNextPage}`);
 
   if (hasNextPage) {
@@ -339,7 +341,7 @@ function ReviewRequests(props: Props) {
   );
   const overallStats = calculateStats(teamGroups);
   const reviewAudit = overallStats.reviewAudit;
-  const auditFileName = `reviewRequests  ${dateRange.startString} - ${dateRange.endString}.csv`;
+  const auditFileName = `reviewRequests ${dateRange.startString} - ${dateRange.endString}.csv`;
 
   function renderTeamGroups(teamGroups: TeamGroup[], prs: Pull[]) {
     const result = teamGroups.map((group: TeamGroup) => {
@@ -361,7 +363,11 @@ function ReviewRequests(props: Props) {
         auditFileName={auditFileName}
         reviewAudit={reviewAudit}
       />
-      <ReviewRequestSummary stats={overallStats} />
+      <ReviewRequestSummary
+        stats={overallStats}
+        prsForTimePeriod={totalPrs}
+        prsFetched={prs.length}
+      />
       {renderTeamGroups(teamGroups, prs)}
     </>
   );

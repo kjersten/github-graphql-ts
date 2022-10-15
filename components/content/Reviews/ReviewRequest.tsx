@@ -11,12 +11,7 @@ import {
   Wrap,
   TagRightIcon,
 } from "@chakra-ui/react";
-import {
-  FaBan,
-  FaArrowsAltV,
-  FaRegClock,
-  FaBusinessTime,
-} from "react-icons/fa";
+import { FaArrowsAltV, FaRegClock, FaBusinessTime } from "react-icons/fa";
 
 import { Pull, TeamReviewRequest } from "../../../types";
 
