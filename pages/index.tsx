@@ -75,9 +75,12 @@ const Home: NextPage = () => {
     return (
       <>
         <Heading mb="4" size="md">
-          See your Pull Requests
+          Team Activity
         </Heading>
-        <Text fontSize="md">Sign in for a list of PRs awaiting review.</Text>
+        <Text fontSize="md">
+          Sign in to get a team-level overview of pull requests, reviews and
+          time to review.
+        </Text>
       </>
     );
   }
