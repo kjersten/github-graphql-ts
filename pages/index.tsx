@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Header from "../components/topbar/Header";
-import { Container, Heading, Text } from "@chakra-ui/react";
+import { Heading, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
+import Layout from "../components/layout";
 import ClientOnly from "../components/control_panel/ClientOnly";
 import ControlPanel from "../components/control_panel/ControlPanel";
 import MainContentPanel from "../components/content/MainContentPanel";
@@ -85,31 +84,7 @@ const Home: NextPage = () => {
     );
   }
 
-  return (
-    <div>
-      <Head>
-        <title>GH Team View</title>
-        <meta name="description" content="View Your Team's Activity" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="robots" content="noindex" />
-        <meta
-          name="google-site-verification"
-          content="uNBFx20dKT8iXB1sIi4jLufzmHFEe-2_rmep8WS7aig"
-        />
-      </Head>
-
-      <header>
-        <Container maxW="container.lg">
-          <Header />
-        </Container>
-      </header>
-      <main>
-        <Container maxW="container.lg">
-          {renderContentBasedOnAuth(status)}
-        </Container>
-      </main>
-    </div>
-  );
+  return <Layout>{renderContentBasedOnAuth(status)}</Layout>;
 };
 
 export default Home;
