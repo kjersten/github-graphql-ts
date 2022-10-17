@@ -22,7 +22,6 @@ import DownloadAuditLog from "./DownloadAuditLog";
 
 type Props = {
   org: string | undefined;
-  teamFullName: string | undefined;
   dateRange: DateRange;
 };
 

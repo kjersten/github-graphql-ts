@@ -5,7 +5,6 @@ type Props = {
   org: string | undefined;
   team: string | undefined;
   setTeam: Function;
-  setTeamFullName: Function;
 };
 
 type Team = {
@@ -34,7 +33,7 @@ const QUERY = gql`
 `;
 
 export default function Organizations(props: Props) {
-  const { org, team, setTeam, setTeamFullName } = props;
+  const { org, team, setTeam } = props;
   const { data, loading, error } = useQuery(QUERY, {
     variables: { org: org },
   });
@@ -57,7 +56,6 @@ export default function Organizations(props: Props) {
         setTeam(e.target.value);
         localStorage.setItem("team", e.target.value);
         const fullName = e.target.selectedOptions[0].dataset.fullname ?? "";
-        setTeamFullName(fullName);
         localStorage.setItem("teamFullName", fullName);
       }}
     >

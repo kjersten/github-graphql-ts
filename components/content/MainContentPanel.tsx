@@ -11,7 +11,6 @@ import ReviewRequests from "./Reviews/ReviewRequests";
 type Props = {
   org: string | undefined;
   team: string | undefined;
-  teamFullName: string | undefined;
   dateRange: DateRange;
 };
 
@@ -41,7 +40,7 @@ const QUERY = gql`
 `;
 
 function MainContentPanel(props: Props) {
-  const { org, team, teamFullName, dateRange } = props;
+  const { org, team, dateRange } = props;
   const { data, loading, error } = useQuery(QUERY, {
     variables: { org: org, team: team },
   });
@@ -102,7 +101,6 @@ function MainContentPanel(props: Props) {
             <ReviewRequests
               key={team + dateRange.startString + "-reviewRequests"}
               org={org}
-              teamFullName={teamFullName}
               dateRange={dateRange}
             />
           </TabPanel>

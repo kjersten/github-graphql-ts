@@ -11,19 +11,10 @@ type Props = {
   setTeam: Function;
   setOrg: Function;
   setDateRange: Function;
-  setTeamFullName: Function;
 };
 
 export default function ControlPanel(props: Props) {
-  const {
-    org,
-    team,
-    dateRange,
-    setOrg,
-    setTeam,
-    setDateRange,
-    setTeamFullName,
-  } = props;
+  const { org, team, dateRange, setOrg, setTeam, setDateRange } = props;
 
   return (
     <HStack spacing="5">
@@ -33,12 +24,7 @@ export default function ControlPanel(props: Props) {
       </FormControl>
       <FormControl id="gh-team" maxW="300">
         <FormLabel>Team</FormLabel>
-        <Teams
-          org={org}
-          team={team}
-          setTeam={setTeam}
-          setTeamFullName={setTeamFullName}
-        />
+        <Teams org={org} team={team} setTeam={setTeam} />
       </FormControl>
       <FormControl>
         <FormLabel>Date Range</FormLabel>
