@@ -1,10 +1,9 @@
 import { useQuery, gql } from "@apollo/client";
 import { Select } from "@chakra-ui/react";
+import { useSelector, useDispatch } from "react-redux";
 
-type Props = {
-  org: string | undefined;
-  setOrg: Function;
-};
+import type { RootState } from "../../app/store";
+import { setOrg } from "../../features/team/teamslice";
 
 type Org = {
   login: string;
@@ -26,8 +25,9 @@ const QUERY = gql`
   }
 `;
 
-export default function Organizations(props: Props) {
-  const { org, setOrg } = props;
+export default function Organizations() {
+  const org = useSelector((state: RootState) => state.team.org);
+  const dispatch = useDispatch();
   const { data, loading, error } = useQuery(QUERY);
 
   if (loading) {
@@ -46,7 +46,7 @@ export default function Organizations(props: Props) {
       placeholder="select an org"
       value={org}
       onChange={(e) => {
-        setOrg(e.target.value);
+        dispatch(setOrg(e.target.value));
         localStorage.setItem("org", e.target.value);
       }}
     >

@@ -1,34 +1,33 @@
 import { HStack, FormControl, FormLabel } from "@chakra-ui/react";
+import { useSelector, useDispatch } from "react-redux";
+
+import type { RootState } from "../../app/store";
+import { setDateRange } from "../../features/team/teamslice";
 import Organizations from "./Organizations";
 import Teams from "./Teams";
 import { DateRange } from "../../types";
 import DateSelector from "./DateSelector";
 
-type Props = {
-  org: string | undefined;
-  team: string | undefined;
-  dateRange: DateRange;
-  setTeam: Function;
-  setOrg: Function;
-  setDateRange: Function;
-};
-
-export default function ControlPanel(props: Props) {
-  const { org, team, dateRange, setOrg, setTeam, setDateRange } = props;
+export default function ControlPanel() {
+  const dateRange = useSelector((state: RootState) => state.team.dateRange);
+  const dispatch = useDispatch();
+  const setRange = function (value: DateRange) {
+    return dispatch(setDateRange(value));
+  };
 
   return (
     <HStack spacing="5">
       <FormControl id="gh-org" maxW="300">
         <FormLabel>Organization</FormLabel>
-        <Organizations org={org} setOrg={setOrg} />
+        <Organizations />
       </FormControl>
       <FormControl id="gh-team" maxW="300">
         <FormLabel>Team</FormLabel>
-        <Teams org={org} team={team} setTeam={setTeam} />
+        <Teams />
       </FormControl>
       <FormControl>
         <FormLabel>Date Range</FormLabel>
-        <DateSelector dateRange={dateRange} setDateRange={setDateRange} />
+        <DateSelector dateRange={dateRange} setDateRange={setRange} />
       </FormControl>
     </HStack>
   );

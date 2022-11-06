@@ -1,15 +1,12 @@
 import { useQuery, gql } from "@apollo/client";
 import { Select } from "@chakra-ui/react";
+import { useSelector, useDispatch } from "react-redux";
 
-type Props = {
-  org: string | undefined;
-  team: string | undefined;
-  setTeam: Function;
-};
+import type { RootState } from "../../app/store";
+import { setTeam } from "../../features/team/teamslice";
 
 type Team = {
   slug: string;
-  combinedSlug: string | null;
 };
 
 const QUERY = gql`
@@ -25,15 +22,17 @@ const QUERY = gql`
           id
           name
           slug
-          combinedSlug
         }
       }
     }
   }
 `;
 
-export default function Organizations(props: Props) {
-  const { org, team, setTeam } = props;
+export default function Organizations() {
+  const org = useSelector((state: RootState) => state.team.org);
+  const team = useSelector((state: RootState) => state.team.team);
+  const dispatch = useDispatch();
+
   const { data, loading, error } = useQuery(QUERY, {
     variables: { org: org },
   });
@@ -53,18 +52,12 @@ export default function Organizations(props: Props) {
       placeholder="select a team"
       value={team}
       onChange={(e) => {
-        setTeam(e.target.value);
+        dispatch(setTeam(e.target.value));
         localStorage.setItem("team", e.target.value);
-        const fullName = e.target.selectedOptions[0].dataset.fullname ?? "";
-        localStorage.setItem("teamFullName", fullName);
       }}
     >
       {teams.map((team: Team) => (
-        <option
-          key={team.slug}
-          value={team.slug}
-          data-fullname={team.combinedSlug}
-        >
+        <option key={team.slug} value={team.slug}>
           {team.slug}
         </option>
       ))}

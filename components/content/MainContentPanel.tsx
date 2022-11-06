@@ -1,18 +1,14 @@
 import { useQuery, gql } from "@apollo/client";
 import { parseWeeks } from "../../utilities/date_utils";
 import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
 
+import type { RootState } from "../../app/store";
 import { DateRange } from "../../types";
 import TeamMemberTitle from "./TeamMemberTitle";
 import PullsByWeek from "./PullsByWeek";
 import CommentsByWeek from "./CommentsByWeek";
 import ReviewRequests from "./Reviews/ReviewRequests";
-
-type Props = {
-  org: string | undefined;
-  team: string | undefined;
-  dateRange: DateRange;
-};
 
 type Member = {
   login: string | undefined;
@@ -39,11 +35,18 @@ const QUERY = gql`
   }
 `;
 
-function MainContentPanel(props: Props) {
-  const { org, team, dateRange } = props;
+function MainContentPanel() {
+  const dateRange = useSelector((state: RootState) => state.team.dateRange);
+  const org = useSelector((state: RootState) => state.team.org);
+  const team = useSelector((state: RootState) => state.team.team);
+
   const { data, loading, error } = useQuery(QUERY, {
     variables: { org: org, team: team },
   });
+
+  if (!team) {
+    return <p>select a team</p>;
+  }
 
   if (loading) {
     return <p>Loading...</p>;
