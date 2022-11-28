@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import teamSlice from "../features/team/teamslice";
+import teamSlice from "../features/team/teamSlice";
 
 export const store = configureStore({
   reducer: {

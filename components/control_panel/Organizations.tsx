@@ -2,8 +2,8 @@ import { useQuery, gql } from "@apollo/client";
 import { Select } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 
-import type { RootState } from "../../app/store";
-import { setOrg } from "../../features/team/teamslice";
+import type { RootState } from "../../rstore/store";
+import { setOrg } from "../../features/team/teamSlice";
 
 type Org = {
   login: string;

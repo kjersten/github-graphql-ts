@@ -3,12 +3,13 @@ import { parseWeeks } from "../../utilities/date_utils";
 import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 
-import type { RootState } from "../../app/store";
+import type { RootState } from "../../rstore/store";
 import { DateRange } from "../../types";
 import TeamMemberTitle from "./TeamMemberTitle";
 import PullsByWeek from "./PullsByWeek";
 import CommentsByWeek from "./CommentsByWeek";
 import ReviewRequests from "./Reviews/ReviewRequests";
+import ControlPanel from "../control_panel/ControlPanel";
 
 type Member = {
   login: string | undefined;
@@ -45,7 +46,12 @@ function MainContentPanel() {
   });
 
   if (!team) {
-    return <p>select a team</p>;
+    return (
+      <>
+        <ControlPanel />
+        <p>select a team</p>
+      </>
+    );
   }
 
   if (loading) {
@@ -61,55 +67,58 @@ function MainContentPanel() {
   const weeks = parseWeeks(dateRange);
 
   return (
-    <Box paddingTop={5}>
-      <Tabs isLazy>
-        <TabList>
-          <Tab>Pulls</Tab>
-          <Tab>Reviews</Tab>
-          <Tab>Time to Review</Tab>
-        </TabList>
+    <>
+      <ControlPanel />
+      <Box paddingTop={5}>
+        <Tabs isLazy>
+          <TabList>
+            <Tab>Pulls</Tab>
+            <Tab>Reviews</Tab>
+            <Tab>Time to Review</Tab>
+          </TabList>
 
-        <TabPanels>
-          <TabPanel>
-            {members.map((member: Member) => (
-              <Box paddingBottom={5} key={member.login}>
-                <TeamMemberTitle login={member.login} name={member.name} />
-                {weeks.map((week: DateRange) => (
-                  <PullsByWeek
-                    key={member.login + week.startString + "pulls"}
-                    org={org}
-                    login={member.login}
-                    week={week}
-                  />
-                ))}
-              </Box>
-            ))}
-          </TabPanel>
-          <TabPanel>
-            {members.map((member: Member) => (
-              <Box paddingBottom={5} key={member.login}>
-                <TeamMemberTitle login={member.login} name={member.name} />
-                {weeks.map((week: DateRange) => (
-                  <CommentsByWeek
-                    key={member.login + week.startString + "comments"}
-                    org={org}
-                    login={member.login}
-                    week={week}
-                  />
-                ))}
-              </Box>
-            ))}
-          </TabPanel>
-          <TabPanel>
-            <ReviewRequests
-              key={team + dateRange.startString + "-reviewRequests"}
-              org={org}
-              dateRange={dateRange}
-            />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </Box>
+          <TabPanels>
+            <TabPanel>
+              {members.map((member: Member) => (
+                <Box paddingBottom={5} key={member.login}>
+                  <TeamMemberTitle login={member.login} name={member.name} />
+                  {weeks.map((week: DateRange) => (
+                    <PullsByWeek
+                      key={member.login + week.startString + "pulls"}
+                      org={org}
+                      login={member.login}
+                      week={week}
+                    />
+                  ))}
+                </Box>
+              ))}
+            </TabPanel>
+            <TabPanel>
+              {members.map((member: Member) => (
+                <Box paddingBottom={5} key={member.login}>
+                  <TeamMemberTitle login={member.login} name={member.name} />
+                  {weeks.map((week: DateRange) => (
+                    <CommentsByWeek
+                      key={member.login + week.startString + "comments"}
+                      org={org}
+                      login={member.login}
+                      week={week}
+                    />
+                  ))}
+                </Box>
+              ))}
+            </TabPanel>
+            <TabPanel>
+              <ReviewRequests
+                key={team + dateRange.startString + "-reviewRequests"}
+                org={org}
+                dateRange={dateRange}
+              />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Box>
+    </>
   );
 }
 

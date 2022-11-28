@@ -294,7 +294,6 @@ function ReviewRequests(props: Props) {
     if (reviewData && fetchMoreReviewRequests) {
       const nextPage = reviewData.search.pageInfo.hasNextPage;
       const endCursor = reviewData.search.pageInfo.endCursor;
-      console.log("endcursor", endCursor);
 
       if (nextPage && endCursor) {
         fetchMoreReviewRequests({ variables: { after: endCursor } });
@@ -310,10 +309,6 @@ function ReviewRequests(props: Props) {
   const prs: Pull[] = reviewData.search.nodes;
   const reviewReqs = getTeamReviewRequests(prs);
   const totalPrs = reviewData.search.issueCount;
-  console.log(
-    `loaded ${prs.length} batch of PRs at ${new Date().toUTCString()}`
-  );
-  console.log(`has next page? ${hasNextPage}`);
 
   if (hasNextPage) {
     return (

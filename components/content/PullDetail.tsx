@@ -33,9 +33,6 @@ function calcBizDaysToMerge(pull: Pull) {
   // const fmtedMergedAt = format(new Date(pull.mergedAt), dateFmt);
   // const fmtedRequestedAt = format(new Date(reviewRequestedAt), dateFmt);
 
-  // console.log(
-  //   `merged ${fmtedMergedAt} - review requested ${fmtedRequestedAt} = ${diffInBizDays}`
-  // );
   return differenceInBusinessDays(
     new Date(pull.mergedAt),
     new Date(reviewRequestedAt)

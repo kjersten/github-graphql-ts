@@ -1,4 +1,13 @@
-import { diffInBizHours, diffInHours } from "./date_utils";
+import { diffInBizHours, diffInHours, parseWeeks } from "./date_utils";
+
+describe("parseWeeks", () => {
+  test("one week range", () => {
+    const startString = "2022-11-06";
+    const endString = "2022-11-13";
+    const oneWeek = { startString, endString };
+    expect(parseWeeks(oneWeek)).toStrictEqual([oneWeek]);
+  });
+});
 
 describe("diffInBizHours", () => {
   test("same day: from 4pm PT to 4:30pm should be 0.5 hrs", () => {

@@ -29,20 +29,20 @@ export function getDefaultDateRange(): DateRange {
   const startString = dateToString(start);
   const endString = dateToString(end);
 
-  return { start, end, startString, endString };
+  return { startString, endString };
 }
 
 export function parseWeeks(dateRange: DateRange): Array<DateRange> {
-  const sundays = eachWeekOfInterval(dateRange);
+  const range = {
+    start: stringToDate(dateRange.startString),
+    end: stringToDate(dateRange.endString),
+  };
+  const sundays = eachWeekOfInterval(range);
   return sundays.reduce((acc: Array<DateRange>, curr, currIndex) => {
     if (currIndex !== 0) {
-      const start = sundays[currIndex - 1];
-      const end = curr;
       acc.push({
-        start,
-        end,
-        startString: dateToString(start),
-        endString: dateToString(end),
+        startString: dateToString(sundays[currIndex - 1]),
+        endString: dateToString(curr),
       });
     }
     return acc;
@@ -53,6 +53,14 @@ export function dateToString(date: Date): string {
   return format(date, DATE_FMT);
 }
 
+export function stringToDate(pureDateString: string): Date {
+  return new Date(`${pureDateString}T00:00:00`);
+}
+
+function pacificTimeDate(dateString: string): Date {
+  return utcToZonedTime(new Date(dateString), TIME_ZONE);
+}
+
 export function diffInHours(
   laterDateString: string | null,
   earlierDateString: string | null
@@ -60,8 +68,8 @@ export function diffInHours(
   if (!laterDateString || !earlierDateString) {
     return -1;
   }
-  const earlierDate = utcToZonedTime(new Date(earlierDateString), TIME_ZONE);
-  const laterDate = utcToZonedTime(new Date(laterDateString), TIME_ZONE);
+  const earlierDate = pacificTimeDate(earlierDateString);
+  const laterDate = pacificTimeDate(laterDateString);
   const diffInMinutes = elapsedMinutes(
     getMinutes(earlierDate),
     getMinutes(laterDate)
@@ -106,8 +114,8 @@ export function diffInBizHours(
     return -1;
   }
 
-  const earlierDate = utcToZonedTime(new Date(earlierDateString), TIME_ZONE);
-  const laterDate = utcToZonedTime(new Date(laterDateString), TIME_ZONE);
+  const earlierDate = pacificTimeDate(earlierDateString);
+  const laterDate = pacificTimeDate(laterDateString);
   const startHour = getHourFraction(earlierDate);
   const endHour = getHourFraction(laterDate);
   const startIsBizDay = isOnBusinessDay(earlierDate);

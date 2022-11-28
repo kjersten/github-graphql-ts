@@ -1,8 +1,8 @@
 import { HStack, FormControl, FormLabel } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 
-import type { RootState } from "../../app/store";
-import { setDateRange } from "../../features/team/teamslice";
+import type { RootState } from "../../rstore/store";
+import { setDateRange } from "../../features/team/teamSlice";
 import Organizations from "./Organizations";
 import Teams from "./Teams";
 import { DateRange } from "../../types";

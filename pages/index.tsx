@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 
 import Layout from "../components/layout";
 import ClientOnly from "../components/control_panel/ClientOnly";
-import ControlPanel from "../components/control_panel/ControlPanel";
 import MainContentPanel from "../components/content/MainContentPanel";
 
 const Home: NextPage = () => {
@@ -35,7 +34,6 @@ const Home: NextPage = () => {
     if (authStatus === "authenticated") {
       return (
         <ClientOnly>
-          <ControlPanel />
           <MainContentPanel />
         </ClientOnly>
       );
