@@ -39,7 +39,6 @@ const DateSelector = (props: Props) => {
       }
     }
   };
-  console.log(startDate);
   return (
     <DatePicker
       selected={startDate}
