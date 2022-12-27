@@ -96,3 +96,9 @@ export interface TeamGroup {
   avgHoursToReview: number | null;
   avgBizHoursToReview: number | null;
 }
+
+export enum Tab {
+  Pulls = "pulls",
+  Reviews = "reviews",
+  Ttr = "ttr",
+}
