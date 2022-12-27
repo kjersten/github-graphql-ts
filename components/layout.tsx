@@ -24,12 +24,12 @@ export default function Layout(props: Props) {
       </Head>
 
       <header>
-        <Container maxW="container.lg">
+        <Container maxW="container.xl">
           <Header />
         </Container>
       </header>
       <main>
-        <Container maxW="container.lg">{children}</Container>
+        <Container maxW="container.xl">{children}</Container>
       </main>
     </div>
   );

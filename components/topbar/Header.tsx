@@ -23,9 +23,6 @@ export default function Header() {
       return (
         <>
           <Box>
-            {/* <Avatar name={session.user.name} src={session.user.image} /> */}
-          </Box>
-          <Box>
             <Text as="strong">
               {session?.user?.email || session?.user?.name}
             </Text>
@@ -59,7 +56,7 @@ export default function Header() {
   }
 
   return (
-    <Flex align="center" mt="1" mb="5">
+    <Flex align="center" mt="2" mb="5">
       <Box>
         <Heading size="xl">GH Team View</Heading>
       </Box>

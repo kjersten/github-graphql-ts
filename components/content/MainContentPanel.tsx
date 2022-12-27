@@ -46,12 +46,7 @@ function MainContentPanel() {
   });
 
   if (!team) {
-    return (
-      <>
-        <ControlPanel />
-        <p>select a team</p>
-      </>
-    );
+    return <ControlPanel />;
   }
 
   if (loading) {
