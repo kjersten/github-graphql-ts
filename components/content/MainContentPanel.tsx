@@ -2,7 +2,7 @@ import { Flex, Box } from "@chakra-ui/react";
 import { useState } from "react";
 
 import Everything from "./Everything";
-import Navbar from "./Navbar";
+import Navbar from "../nav/Navbar";
 import { Tab } from "../../types";
 
 export default function MainContentPanel() {
