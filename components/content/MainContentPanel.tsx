@@ -109,11 +109,7 @@ function MainContentPanel() {
               ))}
             </TabPanel>
             <TabPanel>
-              <ReviewRequests
-                key={team + dateRange.startString + "-reviewRequests"}
-                org={org}
-                dateRange={dateRange}
-              />
+              <ReviewRequests org={org} dateRange={dateRange} />
             </TabPanel>
           </TabPanels>
         </Tabs>
