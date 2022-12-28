@@ -32,6 +32,16 @@ export function getDefaultDateRange(): DateRange {
   return { startString, endString };
 }
 
+export function getDefaultOneWeekDateRange(): DateRange {
+  const today = new Date();
+  const end = isSunday(today) ? today : previousSunday(today);
+  const start = subWeeks(end, 1);
+  const startString = dateToString(start);
+  const endString = dateToString(end);
+
+  return { startString, endString };
+}
+
 export function parseWeeks(dateRange: DateRange): Array<DateRange> {
   const range = {
     start: stringToDate(dateRange.startString),

@@ -10,6 +10,7 @@ import PullsByWeek from "./PullsByWeek";
 import CommentsByWeek from "./CommentsByWeek";
 import ReviewRequests from "./Reviews/ReviewRequests";
 import ControlPanel from "../control_panel/ControlPanel";
+import ReviewRequestWrapper from "./Reviews/ReviewRequestWrapper";
 
 type Props = {
   tab: Tab;
@@ -100,7 +101,7 @@ export default function Everything(props: Props) {
             </Box>
           ))}
 
-        {tab === Tab.Ttr && <ReviewRequests org={org} dateRange={dateRange} />}
+        {tab === Tab.Ttr && <ReviewRequestWrapper />}
       </Box>
     </Box>
   );
