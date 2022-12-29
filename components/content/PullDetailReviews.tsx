@@ -19,7 +19,7 @@ type Props = {
   reviewer: string | undefined;
 };
 
-function PullDetailComments(props: Props) {
+export default function PullDetailReviews(props: Props) {
   const { pull, reviewer } = props;
   let userCommentCount = 0;
   if (
@@ -73,5 +73,3 @@ function PullDetailComments(props: Props) {
     </Flex>
   );
 }
-
-export default PullDetailComments;

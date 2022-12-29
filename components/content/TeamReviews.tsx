@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../rstore/store";
 import { DateRange, Member } from "../../types";
 import TeamMemberSection from "./TeamMemberSection";
-import CommentsByWeek from "./CommentsByWeek";
+import ReviewsByWeek from "./ReviewsByWeek";
 import ControlPanel from "../control_panel/ControlPanel";
 import { TEAM_MEMBER_QUERY } from "../../queries/queries";
 
@@ -40,7 +40,7 @@ export default function TeamReviews() {
       {members.map((member: Member) => (
         <TeamMemberSection member={member} key={member.login}>
           {weeks.map((week: DateRange) => (
-            <CommentsByWeek
+            <ReviewsByWeek
               key={member.login + week.startString + "_reviews"}
               org={org}
               login={member.login}
