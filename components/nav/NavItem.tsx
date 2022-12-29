@@ -1,6 +1,5 @@
 import { Button } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { Link } from "@chakra-ui/react";
 
 import { Tab } from "../../types";
 
@@ -15,10 +14,10 @@ export default function NavItem(props: Props) {
   const style = tabName === selectedTab ? "solid" : "ghost";
 
   return (
-    <Button justifyContent="flex-start" variant={style}>
-      <NextLink href={tabName} passHref>
-        <Link>{text}</Link>
-      </NextLink>
-    </Button>
+    <NextLink href={tabName} passHref>
+      <Button justifyContent="flex-start" variant={style} w="100%">
+        {text}
+      </Button>
+    </NextLink>
   );
 }
