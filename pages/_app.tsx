@@ -8,7 +8,7 @@ import theme from "../styles/theme";
 import { store } from "../rstore/store";
 import { Provider } from "react-redux";
 
-function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider resetCSS theme={theme}>
       <ApolloProvider client={client}>
@@ -21,4 +21,3 @@ function MyApp({ Component, pageProps }: AppProps) {
     </ChakraProvider>
   );
 }
-export default MyApp;
