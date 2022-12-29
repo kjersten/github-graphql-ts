@@ -211,6 +211,10 @@ export default function ReviewRequests(props: Props) {
     }
   }, [reviewData, fetchMoreReviewRequests]);
 
+  if (!org) {
+    return null;
+  }
+
   if (reviewLoading || teamLoading) {
     return <p>Loading initial set of data...</p>;
   }
