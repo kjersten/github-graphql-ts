@@ -98,9 +98,9 @@ export interface TeamGroup {
 }
 
 export enum Tab {
-  Pulls = "pulls",
-  Reviews = "reviews",
-  Ttr = "ttr",
+  Pulls = "/team-prs",
+  Reviews = "/team-reviews",
+  Ttr = "/time-to-review",
 }
 
 export interface Member {

@@ -2,8 +2,7 @@ import { Heading, Text } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 
 import Layout from "../components/layout";
-import ClientOnly from "../components/control_panel/ClientOnly";
-import MainContentPanel from "../components/content/MainContentPanel";
+import LayoutWithNav from "../components/layout_with_nav";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -32,9 +31,15 @@ export default function Home() {
   ) {
     if (authStatus === "authenticated") {
       return (
-        <ClientOnly>
-          <MainContentPanel />
-        </ClientOnly>
+        <LayoutWithNav>
+          <Heading mb="4" size="md">
+            Team Activity
+          </Heading>
+          <Text fontSize="md">
+            Select a tab for an overview of your team&apos;s pull requests,
+            reviews and the time it takes to get a review.
+          </Text>
+        </LayoutWithNav>
       );
     }
     return (
