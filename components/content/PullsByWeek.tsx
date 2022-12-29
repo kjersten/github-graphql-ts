@@ -2,6 +2,7 @@ import { useQuery, gql } from "@apollo/client";
 import { Box } from "@chakra-ui/react";
 
 import PullDetail from "./PullDetail";
+import { PULLS_BY_AUTHOR_QUERY } from "../../queries/queries";
 import { DateRange, Pull } from "../../types";
 
 type Props = {
@@ -10,53 +11,10 @@ type Props = {
   week: DateRange;
 };
 
-const QUERY = gql`
-  query PRs($searchQuery: String!) {
-    search(query: $searchQuery, type: ISSUE, last: 100) {
-      issueCount
-      nodes {
-        ... on PullRequest {
-          __typename
-          id
-          url
-          title
-          author {
-            login
-          }
-          createdAt
-          mergedAt
-          additions
-          deletions
-          repository {
-            __typename
-            id
-            name
-          }
-          reviewThreads(first: 1) {
-            totalCount
-          }
-          readyForReview: timelineItems(
-            first: 1
-            itemTypes: READY_FOR_REVIEW_EVENT
-          ) {
-            nodes {
-              ... on ReadyForReviewEvent {
-                type: __typename
-                id
-                createdAt
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 function PullsByWeek(props: Props) {
   const { org, login, week } = props;
 
-  const { data, loading, error } = useQuery(QUERY, {
+  const { data, loading, error } = useQuery(PULLS_BY_AUTHOR_QUERY, {
     variables: {
       searchQuery: `author:${login} org:${org} is:pr merged:${week.startString}..${week.endString}`,
     },

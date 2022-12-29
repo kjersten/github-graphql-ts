@@ -4,31 +4,16 @@ import { useSelector, useDispatch } from "react-redux";
 
 import type { RootState } from "../../rstore/store";
 import { setOrg } from "../../features/team/teamSlice";
+import { ORGANIZATIONS_QUERY } from "../../queries/queries";
 
 type Org = {
   login: string;
 };
 
-const QUERY = gql`
-  query Organizations {
-    viewer {
-      login
-      organizations(first: 50) {
-        nodes {
-          __typename
-          id
-          name
-          login
-        }
-      }
-    }
-  }
-`;
-
 export default function Organizations() {
   const org = useSelector((state: RootState) => state.team.org);
   const dispatch = useDispatch();
-  const { data, loading, error } = useQuery(QUERY);
+  const { data, loading, error } = useQuery(ORGANIZATIONS_QUERY);
 
   if (loading) {
     return <>Loading...</>;

@@ -19,105 +19,15 @@ import {
 import ReviewRequestSummary from "./ReviewRequestSummary";
 import ReviewRequestTeamGroup from "./ReviewRequestTeamGroup";
 import DownloadAuditLog from "./DownloadAuditLog";
+import {
+  TEAM_QUERY,
+  REVIEWS_FOR_PULLS_WITHIN_DATES_QUERY,
+} from "../../../queries/queries";
 
 type Props = {
   org: string | undefined;
   dateRange: DateRange;
 };
-
-const REVIEW_QUERY = gql`
-  query allPrsForTimerange($searchQuery: String!, $after: String) {
-    search(query: $searchQuery, type: ISSUE, first: 45, after: $after) {
-      issueCount
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-      nodes {
-        ... on PullRequest {
-          __typename
-          id
-          url
-          title
-          author {
-            __typename
-            login
-          }
-          createdAt
-          mergedAt
-          additions
-          deletions
-          repository {
-            __typename
-            id
-            name
-          }
-          reviewRequestedEvents: timelineItems(
-            first: 10
-            itemTypes: REVIEW_REQUESTED_EVENT
-          ) {
-            nodes {
-              ... on ReviewRequestedEvent {
-                __typename
-                id
-                createdAt
-                requestedReviewer {
-                  ... on Team {
-                    __typename
-                    id
-                    slug
-                    combinedSlug
-                  }
-                }
-              }
-            }
-          }
-          reviews(first: 10) {
-            nodes {
-              ... on PullRequestReview {
-                __typename
-                id
-                createdAt
-                author {
-                  login
-                }
-                onBehalfOf(first: 1) {
-                  nodes {
-                    __typename
-                    id
-                    name
-                    slug
-                    combinedSlug
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-const TEAM_QUERY = gql`
-  query Teams($org: String!) {
-    organization(login: $org) {
-      __typename
-      id
-      name
-      login
-      teams(first: 50) {
-        nodes {
-          __typename
-          id
-          name
-          slug
-          combinedSlug
-        }
-      }
-    }
-  }
-`;
 
 function registerReviewRequests(
   prId: string,
@@ -277,7 +187,7 @@ function ReviewRequests(props: Props) {
     loading: reviewLoading,
     error: reviewError,
     fetchMore: fetchMoreReviewRequests,
-  } = useQuery(REVIEW_QUERY, {
+  } = useQuery(REVIEWS_FOR_PULLS_WITHIN_DATES_QUERY, {
     variables: {
       searchQuery: `org:${org} is:pr created:${dateRange.startString}..${dateRange.endString}`,
       pollInterval: 0,
