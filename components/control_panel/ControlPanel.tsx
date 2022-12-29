@@ -16,7 +16,7 @@ export default function ControlPanel() {
   };
 
   return (
-    <HStack spacing="5">
+    <HStack spacing="5" pb={5}>
       <FormControl id="gh-org" maxW="300">
         <FormLabel>Organization</FormLabel>
         <Organizations />

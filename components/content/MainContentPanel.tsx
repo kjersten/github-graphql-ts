@@ -1,7 +1,9 @@
 import { Flex, Box } from "@chakra-ui/react";
 import { useState } from "react";
 
-import Everything from "./Everything";
+import TeamPulls from "./TeamPulls";
+import TeamReviews from "./TeamReviews";
+import ReviewRequestWrapper from "./Reviews/ReviewRequestWrapper";
 import Navbar from "../nav/Navbar";
 import { Tab } from "../../types";
 
@@ -11,7 +13,9 @@ export default function MainContentPanel() {
     <Flex>
       <Navbar selectedTab={tab} setTab={setTab} />
       <Box w="100%">
-        <Everything tab={tab} />
+        {tab === Tab.Pulls && <TeamPulls />}
+        {tab === Tab.Reviews && <TeamReviews />}
+        {tab === Tab.Ttr && <ReviewRequestWrapper />}
       </Box>
     </Flex>
   );

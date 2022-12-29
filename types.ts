@@ -102,3 +102,8 @@ export enum Tab {
   Reviews = "reviews",
   Ttr = "ttr",
 }
+
+export interface Member {
+  login: string | undefined;
+  name: string | undefined;
+}
