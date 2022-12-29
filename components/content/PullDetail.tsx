@@ -39,7 +39,7 @@ function calcBizDaysToMerge(pull: Pull) {
   );
 }
 
-function PullDetail(props: Props) {
+export default function PullDetail(props: Props) {
   const { pull } = props;
   const bizDaysToMerge = calcBizDaysToMerge(pull);
 
@@ -91,5 +91,3 @@ function PullDetail(props: Props) {
     </Flex>
   );
 }
-
-export default PullDetail;

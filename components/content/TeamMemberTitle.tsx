@@ -5,7 +5,7 @@ type Props = {
   name: string | undefined;
 };
 
-function TeamMemberTitle(props: Props) {
+export default function TeamMemberTitle(props: Props) {
   const { login, name } = props;
 
   return (
@@ -14,5 +14,3 @@ function TeamMemberTitle(props: Props) {
     </Heading>
   );
 }
-
-export default TeamMemberTitle;

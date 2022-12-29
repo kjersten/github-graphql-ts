@@ -10,7 +10,7 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { DarkModeSwitch } from "./DarkModeSwitch";
+import DarkModeSwitch from "./DarkModeSwitch";
 
 export default function Header() {
   const { data: session, status } = useSession();

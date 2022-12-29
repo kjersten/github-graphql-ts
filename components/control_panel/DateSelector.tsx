@@ -16,7 +16,7 @@ type Props = {
   setDateRange: Function;
 };
 
-const DateSelector = (props: Props) => {
+export default function DateSelector(props: Props) {
   const { setDateRange } = props;
   const defaultDates = getDefaultDateRange();
   const customInput = <Input />;
@@ -50,6 +50,4 @@ const DateSelector = (props: Props) => {
       selectsRange
     />
   );
-};
-
-export default DateSelector;
+}

@@ -20,7 +20,7 @@ type Props = {
   pull: Pull | undefined;
 };
 
-function ReviewRequest(props: Props) {
+export default function ReviewRequest(props: Props) {
   const { teamReviewRequest, pull } = props;
 
   if (!pull) {
@@ -73,5 +73,3 @@ function ReviewRequest(props: Props) {
     </Flex>
   );
 }
-
-export default ReviewRequest;

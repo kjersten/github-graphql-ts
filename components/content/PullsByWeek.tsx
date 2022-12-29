@@ -11,7 +11,7 @@ type Props = {
   week: DateRange;
 };
 
-function PullsByWeek(props: Props) {
+export default function PullsByWeek(props: Props) {
   const { org, login, week } = props;
 
   const { data, loading, error } = useQuery(PULLS_BY_AUTHOR_QUERY, {
@@ -41,5 +41,3 @@ function PullsByWeek(props: Props) {
     </Box>
   );
 }
-
-export default PullsByWeek;

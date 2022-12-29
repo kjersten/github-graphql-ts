@@ -180,7 +180,7 @@ function getTeamReviewRequests(prs: Pull[]) {
   return teamRequests;
 }
 
-function ReviewRequests(props: Props) {
+export default function ReviewRequests(props: Props) {
   const { org, dateRange } = props;
   const {
     data: reviewData,
@@ -276,5 +276,3 @@ function ReviewRequests(props: Props) {
     </>
   );
 }
-
-export default ReviewRequests;
