@@ -1,9 +1,9 @@
 import { Flex, Box } from "@chakra-ui/react";
 import { useState } from "react";
 
-import TeamPulls from "./TeamPulls";
-import TeamReviews from "./TeamReviews";
-import ReviewRequestWrapper from "./Reviews/ReviewRequestWrapper";
+import TeamPulls from "./team/pulls/TeamPulls";
+import TeamReviews from "./team/reviews/TeamReviews";
+import ReviewRequestWrapper from "./time-to-review/ReviewRequestWrapper";
 import Navbar from "../nav/Navbar";
 import { Tab } from "../../types";
 

@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 
 import TeamMemberTitle from "./TeamMemberTitle";
-import { Member } from "../../types";
+import { Member } from "../../../types";
 
 type Props = {
   member: Member;

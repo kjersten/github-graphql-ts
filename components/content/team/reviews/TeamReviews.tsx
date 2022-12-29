@@ -1,13 +1,13 @@
 import { useQuery } from "@apollo/client";
-import { parseWeeks } from "../../utilities/date_utils";
+import { parseWeeks } from "../../../../utilities/date_utils";
 import { useSelector } from "react-redux";
 
-import type { RootState } from "../../rstore/store";
-import { DateRange, Member } from "../../types";
-import TeamMemberSection from "./TeamMemberSection";
+import type { RootState } from "../../../../rstore/store";
+import { DateRange, Member } from "../../../../types";
+import TeamMemberSection from "../TeamMemberSection";
 import ReviewsByWeek from "./ReviewsByWeek";
-import ControlPanel from "../control_panel/ControlPanel";
-import { TEAM_MEMBER_QUERY } from "../../queries/queries";
+import ControlPanel from "../../../control_panel/ControlPanel";
+import { TEAM_MEMBER_QUERY } from "../../../../queries/queries";
 
 export default function TeamReviews() {
   const dateRange = useSelector((state: RootState) => state.team.dateRange);
