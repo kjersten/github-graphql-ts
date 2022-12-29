@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import { Heading, Text } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 
@@ -6,7 +5,7 @@ import Layout from "../components/layout";
 import ClientOnly from "../components/control_panel/ClientOnly";
 import MainContentPanel from "../components/content/MainContentPanel";
 
-const Home: NextPage = () => {
+export default function Home() {
   const { data: session, status } = useSession();
 
   // useEffect(() => {
@@ -52,6 +51,4 @@ const Home: NextPage = () => {
   }
 
   return <Layout>{renderContentBasedOnAuth(status)}</Layout>;
-};
-
-export default Home;
+}
