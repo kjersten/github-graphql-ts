@@ -1,4 +1,4 @@
-import { diffInBizHours, diffInHours, parseWeeks } from "./date_utils";
+import { diffInBizHours, diffInHours, parseWeeks } from "./date-utils";
 
 describe("parseWeeks", () => {
   test("one week range", () => {

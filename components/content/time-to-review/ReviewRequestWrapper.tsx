@@ -5,7 +5,7 @@ import { Box, HStack, FormControl, FormLabel } from "@chakra-ui/react";
 import ReviewRequests from "./ReviewRequests";
 import DateSelector from "../../control_panel/DateSelector";
 import Organizations from "../../control_panel/Organizations";
-import { getDefaultOneWeekDateRange } from "../../../utilities/date_utils";
+import { getDefaultOneWeekDateRange } from "../../../utilities/date-utils";
 import { DateRange } from "../../../types";
 import type { RootState } from "../../../rstore/store";
 

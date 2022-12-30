@@ -14,7 +14,7 @@ import {
   groupTeamRequests,
   calculateStats,
   getTeamReviewRequests,
-} from "./utils";
+} from "../../../utilities/time-to-review-utils";
 
 type Props = {
   org: string | undefined;

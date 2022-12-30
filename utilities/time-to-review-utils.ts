@@ -1,8 +1,4 @@
-import {
-  diffInBizHours,
-  diffInHours,
-  twoDecimals,
-} from "../../../utilities/date_utils";
+import { diffInBizHours, diffInHours, twoDecimals } from "./date-utils";
 import {
   Team,
   Pull,
@@ -10,7 +6,7 @@ import {
   ReviewRequestedEvent,
   PullRequestReview,
   TeamGroup,
-} from "../../../types";
+} from "../types";
 
 function registerReviewRequests(
   prId: string,

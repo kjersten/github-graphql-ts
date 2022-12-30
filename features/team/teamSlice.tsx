@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { DateRange } from "../../types";
-import { getDefaultDateRange } from "../../utilities/date_utils";
+import { getDefaultDateRange } from "../../utilities/date-utils";
 
 export interface TeamState {
   org: string;

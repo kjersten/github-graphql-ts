@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { parseWeeks } from "../../../../utilities/date_utils";
+import { parseWeeks } from "../../../../utilities/date-utils";
 import { useSelector } from "react-redux";
 
 import type { RootState } from "../../../../rstore/store";

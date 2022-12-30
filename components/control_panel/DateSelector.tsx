@@ -6,7 +6,7 @@ import {
   getDefaultDateRange,
   dateToString,
   stringToDate,
-} from "../../utilities/date_utils";
+} from "../../utilities/date-utils";
 import "react-datepicker/dist/react-datepicker.css";
 import { isSunday } from "date-fns";
 

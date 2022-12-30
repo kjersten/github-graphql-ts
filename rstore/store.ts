@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import teamSlice from "../features/team/teamSlice";
 import { listenerMiddleware } from "./middleware";
-import { getDefaultDateRange } from "../utilities/date_utils";
+import { getDefaultDateRange } from "../utilities/date-utils";
 
 let storedOrg = "";
 let storedTeam = "";
