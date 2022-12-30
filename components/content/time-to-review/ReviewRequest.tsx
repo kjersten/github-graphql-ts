@@ -9,7 +9,6 @@ import {
   TagLeftIcon,
   Text,
   Wrap,
-  TagRightIcon,
 } from "@chakra-ui/react";
 import { FaArrowsAltV, FaRegClock, FaBusinessTime } from "react-icons/fa";
 

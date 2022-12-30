@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Alert, Box, Spinner, Stack } from "@chakra-ui/react";
 import { useEffect } from "react";
 

@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Select } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -10,7 +10,7 @@ type Team = {
   slug: string;
 };
 
-export default function Organizations() {
+export default function Teams() {
   const org = useSelector((state: RootState) => state.team.org);
   const team = useSelector((state: RootState) => state.team.team);
   const dispatch = useDispatch();

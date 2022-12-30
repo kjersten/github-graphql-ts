@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Select } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 

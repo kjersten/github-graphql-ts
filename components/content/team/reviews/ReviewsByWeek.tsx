@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Box } from "@chakra-ui/react";
 
 import { DateRange, Pull } from "../../../../types";
