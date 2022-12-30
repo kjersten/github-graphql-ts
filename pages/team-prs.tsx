@@ -1,5 +1,5 @@
-import Layout from "../components/layout";
-import LayoutWithNav from "../components/layout_with_nav";
+import Layout from "../components/Layout";
+import LayoutWithNav from "../components/LayoutWithNav";
 import TeamPulls from "../components/content/team/pulls/TeamPulls";
 
 export default function TeamPrs() {

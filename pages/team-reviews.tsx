@@ -1,5 +1,5 @@
-import Layout from "../components/layout";
-import LayoutWithNav from "../components/layout_with_nav";
+import Layout from "../components/Layout";
+import LayoutWithNav from "../components/LayoutWithNav";
 import TeamReviews from "../components/content/team/reviews/TeamReviews";
 
 export default function TeamPrs() {

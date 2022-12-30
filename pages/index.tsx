@@ -1,8 +1,8 @@
 import { Heading, Text } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 
-import Layout from "../components/layout";
-import LayoutWithNav from "../components/layout_with_nav";
+import Layout from "../components/Layout";
+import LayoutWithNav from "../components/LayoutWithNav";
 
 export default function Home() {
   const { data: session, status } = useSession();
