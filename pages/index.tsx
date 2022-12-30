@@ -7,21 +7,6 @@ import LayoutWithNav from "../components/layout_with_nav";
 export default function Home() {
   const { data: session, status } = useSession();
 
-  // useEffect(() => {
-  //   if (window.localStorage.getItem("org") !== undefined) {
-  //     const storedOrg = window.localStorage.getItem("org");
-  //     if (storedOrg !== null) {
-  //       setOrg(storedOrg);
-  //     }
-  //   }
-  //   if (window.localStorage.getItem("team") !== undefined) {
-  //     const storedTeam = window.localStorage.getItem("team");
-  //     if (storedTeam !== null) {
-  //       setTeam(storedTeam);
-  //     }
-  //   }
-  // }, []);
-
   if (status === "authenticated") {
     console.log(`session access token: ${session.accessToken}`);
   }
