@@ -18,7 +18,7 @@ export default function TeamPulls() {
     variables: { org: org, team: team },
   });
 
-  if (!team) {
+  if (!org || !team) {
     return <ControlPanel />;
   }
 
