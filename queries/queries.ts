@@ -1,19 +1,15 @@
 import { gql } from "@apollo/client";
 
-export const TEAM_MEMBER_QUERY = gql`
-  query teamMembers($org: String!, $team: String!) {
-    organization(login: $org) {
-      __typename
-      id
-      team(slug: $team) {
-        __typename
-        id
-        members {
-          nodes {
-            id
-            login
-            name
-          }
+export const ORGANIZATIONS_QUERY = gql`
+  query Organizations {
+    viewer {
+      login
+      organizations(first: 50) {
+        nodes {
+          __typename
+          id
+          name
+          login
         }
       }
     }
@@ -34,6 +30,26 @@ export const TEAM_QUERY = gql`
           name
           slug
           combinedSlug
+        }
+      }
+    }
+  }
+`;
+
+export const TEAM_MEMBER_QUERY = gql`
+  query teamMembers($org: String!, $team: String!) {
+    organization(login: $org) {
+      __typename
+      id
+      team(slug: $team) {
+        __typename
+        id
+        members {
+          nodes {
+            id
+            login
+            name
+          }
         }
       }
     }
@@ -212,22 +228,6 @@ export const PULLS_BY_AUTHOR_QUERY = gql`
               }
             }
           }
-        }
-      }
-    }
-  }
-`;
-
-export const ORGANIZATIONS_QUERY = gql`
-  query Organizations {
-    viewer {
-      login
-      organizations(first: 50) {
-        nodes {
-          __typename
-          id
-          name
-          login
         }
       }
     }
