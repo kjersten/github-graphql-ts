@@ -18,7 +18,7 @@ import {
 } from "react-icons/fa";
 
 import { differenceInBusinessDays } from "date-fns";
-import { Pull } from "../../../../types";
+import { Pull } from "../../../types";
 
 type Props = {
   pull: Pull;

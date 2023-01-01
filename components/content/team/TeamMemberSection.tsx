@@ -1,18 +1,19 @@
 import { Box } from "@chakra-ui/react";
 
 import TeamMemberTitle from "./TeamMemberTitle";
-import { Member } from "../../../types";
+import { Member, DetailPage } from "../../../types";
 
 type Props = {
   member: Member;
   children: React.ReactNode;
+  page: DetailPage;
 };
 
 export default function TeamMemberSection(props: Props) {
-  const { member, children } = props;
+  const { member, children, page } = props;
   return (
-    <Box paddingBottom={5} key={member.login}>
-      <TeamMemberTitle login={member.login} name={member.name} />
+    <Box paddingBottom={5}>
+      <TeamMemberTitle login={member.login} name={member.name} page={page} />
       {children}
     </Box>
   );

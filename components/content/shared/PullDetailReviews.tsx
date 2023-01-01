@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { FaRegComments, FaUserPlus } from "react-icons/fa";
 
-import { Pull } from "../../../../types";
+import { Pull } from "../../../types";
 
 type Props = {
   pull: Pull;

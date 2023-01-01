@@ -42,6 +42,20 @@ export function getDefaultOneWeekDateRange(): DateRange {
   return { startString, endString };
 }
 
+export function getWeeksOfPastSixMonths(): Array<DateRange> {
+  const weeks = [];
+  const today = new Date();
+  let end = isSunday(today) ? today : previousSunday(today);
+  for (let week = 0; week < 26; week++) {
+    const start = subWeeks(end, 1);
+    const startString = dateToString(start);
+    const endString = dateToString(end);
+    weeks.push({ startString, endString });
+    end = start;
+  }
+  return weeks;
+}
+
 export function parseWeeks(dateRange: DateRange): Array<DateRange> {
   const range = {
     start: stringToDate(dateRange.startString),

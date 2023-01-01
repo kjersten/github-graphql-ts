@@ -103,6 +103,11 @@ export enum Tab {
   Ttr = "/time-to-review",
 }
 
+export enum DetailPage {
+  Pulls = "/author-prs",
+  Reviews = "/author-reviews",
+}
+
 export interface Member {
   login: string | undefined;
   name: string | undefined;

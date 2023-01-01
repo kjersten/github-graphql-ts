@@ -3,9 +3,9 @@ import { parseWeeks } from "../../../../utilities/date-utils";
 import { useSelector } from "react-redux";
 
 import type { RootState } from "../../../../rstore/store";
-import { DateRange, Member } from "../../../../types";
+import { DateRange, Member, DetailPage } from "../../../../types";
 import TeamMemberSection from "../TeamMemberSection";
-import PullsByWeek from "./PullsByWeek";
+import PullsByWeek from "../../shared/PullsByWeek";
 import ControlPanel from "../../../control_panel/ControlPanel";
 import { TEAM_MEMBER_QUERY } from "../../../../queries/queries";
 
@@ -38,7 +38,11 @@ export default function TeamPulls() {
     <>
       <ControlPanel />
       {members.map((member: Member) => (
-        <TeamMemberSection member={member} key={member.login}>
+        <TeamMemberSection
+          member={member}
+          page={DetailPage.Pulls}
+          key={member.login}
+        >
           {weeks.map((week: DateRange) => (
             <PullsByWeek
               key={member.login + week.startString + "_pulls"}

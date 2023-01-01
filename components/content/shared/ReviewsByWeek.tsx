@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { Box } from "@chakra-ui/react";
 
-import { DateRange, Pull } from "../../../../types";
+import { DateRange, Pull } from "../../../types";
 import PullDetailReviews from "./PullDetailReviews";
-import { REVIEWS_QUERY } from "../../../../queries/queries";
+import { REVIEWS_QUERY } from "../../../queries/queries";
 
 type Props = {
   org: string | undefined;

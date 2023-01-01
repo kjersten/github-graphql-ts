@@ -36,6 +36,16 @@ export const TEAM_QUERY = gql`
   }
 `;
 
+export const CHECK_USER = gql`
+  query checkUserExists($login: String!) {
+    user(login: $login) {
+      id
+      login
+      name
+    }
+  }
+`;
+
 export const TEAM_MEMBER_QUERY = gql`
   query teamMembers($org: String!, $team: String!) {
     organization(login: $org) {
