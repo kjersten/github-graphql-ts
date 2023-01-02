@@ -11,7 +11,7 @@ type Props = {
 
 export default function NavItem(props: Props) {
   const { text, tabName, selectedTab } = props;
-  const style = tabName === selectedTab ? "solid" : "ghost";
+  const style = selectedTab.startsWith(tabName) ? "solid" : "ghost";
 
   return (
     <NextLink href={tabName} passHref>

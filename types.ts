@@ -98,8 +98,10 @@ export interface TeamGroup {
 }
 
 export enum Tab {
-  Pulls = "/team-prs",
-  Reviews = "/team-reviews",
+  TeamPulls = "/team-prs",
+  AuthorPulls = "/author-prs",
+  TeamReviews = "/team-reviews",
+  AuthorReviews = "/author-reviews",
   Ttr = "/time-to-review",
 }
 
