@@ -43,7 +43,7 @@ export default function AuthorPulls(props: Props) {
   return (
     <Box>
       <Heading as="h1" size="lg" pb={5} pt={5}>
-        {user.name} <em>({user.login})</em>
+        PRs: {user.name} <em>({user.login})</em>
       </Heading>
 
       <Flex pb={3}>
