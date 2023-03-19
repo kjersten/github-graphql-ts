@@ -1,4 +1,5 @@
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import {
   Box,
   Flex,
@@ -14,11 +15,15 @@ import DarkModeSwitch from "./DarkModeSwitch";
 
 export default function Header() {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   function renderSignInOrOut(
     authStatus: "authenticated" | "loading" | "unauthenticated",
     session: any
   ) {
+    if (router.pathname === "/auth/signin") {
+      return null;
+    }
     if (authStatus === "authenticated") {
       return (
         <>

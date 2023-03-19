@@ -48,6 +48,11 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/events
   events: {},
 
+  // custom pages
+  pages: {
+    signIn: "/auth/signin",
+  },
+
   // Enable debug messages in the console if you are having problems
   debug: false,
 });
