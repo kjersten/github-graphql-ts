@@ -33,8 +33,8 @@ export default function Home() {
           Team Activity
         </Heading>
         <Text fontSize="md">
-          Sign in to get a team-level overview of pull requests, reviews and
-          time to review.
+          Sign in with your GitHub account to get a team-level overview of pull
+          requests, reviews and time to review.
         </Text>
       </>
     );
